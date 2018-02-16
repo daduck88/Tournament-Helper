@@ -1,4 +1,15 @@
 <resources>
   <string name="app_name">Tournament-Helper</string>
   <string name="action_settings">Settings</string>
+  <string name="title_activity_create_tournament">Create Tournament</string>
+  <string name="completed_tournament_cleared">Tourment created</string>
+  <string name="menu_filter">filter</string>
+  <string name="menu_clear">clear</string>
+  <string name="refresh">refresh</string>
+  <string name="navigation_view_header_title">temp</string>
+  <string name="no_data">no data temp</string>
+  <string name="no_data_description">no data description temp</string>
+  <string name="task_marked_complete">task marked complete temo</string>
+  <string name="task_marked_active">task marked active temp</string>
+  <string name="empty_task_message">empty task message temp</string>
 </resources>

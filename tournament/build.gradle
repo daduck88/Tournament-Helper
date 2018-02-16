@@ -24,6 +24,7 @@ allprojects {
     ext {
         androidSupportVersion = "26.1.0"
         fireBaseVersion = "11.8.0"
+        guavaVersion = "24.0-android"
     }
 }
 
