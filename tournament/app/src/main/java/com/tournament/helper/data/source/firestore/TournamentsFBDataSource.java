@@ -14,12 +14,15 @@
  * limitations under the License.
  */
 
-package com.tournament.helper.data;
+package com.tournament.helper.data.source.firestore;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
 
 import com.google.common.collect.Lists;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.tournament.helper.data.Tournament;
+import com.tournament.helper.data.source.TeamsDataSource;
 import com.tournament.helper.data.source.TournamentsDataSource;
 
 import java.util.Iterator;
@@ -29,18 +32,21 @@ import java.util.Map;
 /**
  * Implementation of a remote data source with static access to the data for easy testing.
  */
-public class FakeTournamentsRemoteDataSource implements TournamentsDataSource {
+public class TournamentsFBDataSource implements TournamentsDataSource {
 
-    private static FakeTournamentsRemoteDataSource INSTANCE;
+    private static TournamentsFBDataSource INSTANCE;
 
     private static final Map<String, Tournament> TASKS_SERVICE_DATA = new LinkedHashMap<>();
+    private FirebaseFirestore mDB;
 
     // Prevent direct instantiation.
-    private FakeTournamentsRemoteDataSource() {}
+    private TournamentsFBDataSource() {
+        mDB = FirebaseFirestore.getInstance();
+    }
 
-    public static FakeTournamentsRemoteDataSource getInstance() {
+    public static TournamentsFBDataSource getInstance() {
         if (INSTANCE == null) {
-            INSTANCE = new FakeTournamentsRemoteDataSource();
+            INSTANCE = new TournamentsFBDataSource();
         }
         return INSTANCE;
     }

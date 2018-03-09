@@ -23,34 +23,44 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.tournament.helper.Injection;
 import com.tournament.helper.R;
+import com.tournament.helper.data.helper.SelectTeam;
 import com.tournament.helper.databinding.CreateTournamentFragBinding;
 import com.tournament.helper.utils.SnackbarUtils;
+
+import java.util.ArrayList;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Main UI for the add task screen. Users can enter a task title and description.
  */
-public class AddTournamentFragment extends Fragment {
+public class CreateTournamentFragment extends Fragment {
 
     public static final String ARGUMENT_EDIT_TASK_ID = "EDIT_TASK_ID";
 
-    private AddTournamentViewModel mViewModel;
+    private CreateTournamentViewModel mViewModel;
 
     private CreateTournamentFragBinding mViewDataBinding;
 
     private Observable.OnPropertyChangedCallback mSnackbarCallback;
 
-    public static AddTournamentFragment newInstance() {
-        return new AddTournamentFragment();
+    public static CreateTournamentFragment newInstance() {
+        return new CreateTournamentFragment();
     }
 
-    public AddTournamentFragment() {
+    public CreateTournamentFragment() {
         // Required empty public constructor
     }
 
@@ -64,7 +74,7 @@ public class AddTournamentFragment extends Fragment {
         }
     }
 
-    public void setViewModel(@NonNull AddTournamentViewModel viewModel) {
+    public void setViewModel(@NonNull CreateTournamentViewModel viewModel) {
         mViewModel = checkNotNull(viewModel);
     }
 
@@ -72,11 +82,28 @@ public class AddTournamentFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        setupFab();
+        setHasOptionsMenu(true);
+
+        setupListAdapter();
 
         setupSnackbar();
 
         setupActionBar();
+    }
+
+    private void setupListAdapter() {
+
+        RecyclerView listView = mViewDataBinding.createTournamentTeams;
+        listView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        // init selectTeam list
+        ArrayList<SelectTeam> selectTeams = new ArrayList<>();
+        for(int count = 0; count < 8; count++) {
+            selectTeams.add(new SelectTeam());
+        }
+        listView.setAdapter(new SelectTeamsAdapter(
+            selectTeams,
+            mViewModel,
+            Injection.provideTeamsRepository()));
     }
 
     @Nullable
@@ -97,6 +124,22 @@ public class AddTournamentFragment extends Fragment {
     }
 
     @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.create_tournament_menu, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()){
+            case R.id.menu_create :
+                mViewModel.saveTournament();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     public void onDestroy() {
         if (mSnackbarCallback != null) {
             mViewModel.snackbarText.removeOnPropertyChangedCallback(mSnackbarCallback);
@@ -108,22 +151,12 @@ public class AddTournamentFragment extends Fragment {
         mSnackbarCallback = new Observable.OnPropertyChangedCallback() {
             @Override
             public void onPropertyChanged(Observable observable, int i) {
-                SnackbarUtils.showSnackbar(getView(), mViewModel.getSnackbarText());
+                if(!TextUtils.isEmpty(mViewModel.getSnackbarText())) {
+                    SnackbarUtils.showSnackbar(getView(), mViewModel.getSnackbarText());
+                }
             }
         };
         mViewModel.snackbarText.addOnPropertyChangedCallback(mSnackbarCallback);
-    }
-
-    private void setupFab() {
-//        FloatingActionButton fab =
-//                (FloatingActionButton) getActivity().findViewById(R.id.fab_edit_task_done);
-//        fab.setImageResource(R.drawable.ic_done);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                mViewModel.saveTask();
-//            }
-//        });
     }
 
     private void setupActionBar() {

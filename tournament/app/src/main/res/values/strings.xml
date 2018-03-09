@@ -12,4 +12,8 @@
   <string name="task_marked_complete">task marked complete temo</string>
   <string name="task_marked_active">task marked active temp</string>
   <string name="empty_task_message">empty task message temp</string>
+
+
+  <string name="create_tournament_select_team">Select Team</string>
+  <string name="menu_create">create</string>
 </resources>

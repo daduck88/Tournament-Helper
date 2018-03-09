@@ -8,6 +8,7 @@ buildscript {
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.0.1'
+        classpath 'com.google.gms:google-services:3.2.0'
         
 
         // NOTE: Do not place your application dependencies here; they belong
@@ -25,6 +26,7 @@ allprojects {
         androidSupportVersion = "26.1.0"
         fireBaseVersion = "11.8.0"
         guavaVersion = "24.0-android"
+        gsonVersion = "2.8.2"
     }
 }
 

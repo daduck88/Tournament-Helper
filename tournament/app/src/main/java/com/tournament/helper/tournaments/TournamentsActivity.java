@@ -19,7 +19,6 @@ package com.tournament.helper.tournaments;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.VisibleForTesting;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -31,7 +30,7 @@ import android.view.MenuItem;
 import com.tournament.helper.Injection;
 import com.tournament.helper.R;
 import com.tournament.helper.ViewModelHolder;
-import com.tournament.helper.create.AddTournamentActivity;
+import com.tournament.helper.create.CreateTournamentActivity;
 import com.tournament.helper.utils.ActivityUtils;
 
 public class TournamentsActivity extends AppCompatActivity implements TournamentItemNavigator, TournamentsNavigator {
@@ -178,7 +177,7 @@ public class TournamentsActivity extends AppCompatActivity implements Tournament
 
     @Override
     public void addNewTournament() {
-        Intent intent = new Intent(this, AddTournamentActivity.class);
-        startActivityForResult(intent, AddTournamentActivity.REQUEST_CODE);
+        Intent intent = new Intent(this, CreateTournamentActivity.class);
+        startActivityForResult(intent, CreateTournamentActivity.REQUEST_CODE);
     }
 }

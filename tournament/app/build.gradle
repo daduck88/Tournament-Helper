@@ -33,11 +33,15 @@ dependencies {
   implementation 'com.android.support.constraint:constraint-layout:1.0.2'
   //utils
   compile "com.google.guava:guava:$guavaVersion" // 14,842 methods
+  //gson
+  implementation "com.google.code.gson:gson:$gsonVersion"
   //FireBase
-  implementation "com.google.firebase:firebase-database:$fireBaseVersion"
+//  implementation "com.google.firebase:firebase-core:$fireBaseVersion"
+  implementation "com.google.firebase:firebase-firestore:$fireBaseVersion"
   implementation "com.google.firebase:firebase-ads:$fireBaseVersion"
   //Test libraries
   testImplementation 'junit:junit:4.12'
   androidTestImplementation 'com.android.support.test:runner:1.0.1'
   androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
 }
+apply plugin: 'com.google.gms.google-services'

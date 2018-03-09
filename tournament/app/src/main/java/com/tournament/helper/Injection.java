@@ -19,27 +19,29 @@ package com.tournament.helper;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
-import com.tournament.helper.data.FakeTournamentsRemoteDataSource;
+import com.tournament.helper.data.source.TeamsRepository;
+import com.tournament.helper.data.source.TournamentsDataSource;
 import com.tournament.helper.data.source.TournamentsRepository;
-import com.tournament.helper.data.source.local.ToDoDatabase;
-import com.tournament.helper.data.source.local.TournamentsLocalDataSource;
+import com.tournament.helper.data.source.firestore.TeamsFBDataSource;
+import com.tournament.helper.data.source.firestore.TournamentsFBDataSource;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-/**
+/** TODO check this doc
  * Enables injection of mock implementations for
  * {@link TournamentsDataSource} at compile time. This is useful for testing, since it allows us to use
  * a fake instance of the class to isolate the dependencies and run a test hermetically.
  */
 public class Injection {
 
-    public static TournamentsRepository provideTournamentsRepository(@NonNull Context context) {
-        checkNotNull(context);
-//        ToDoDatabase database = ToDoDatabase.getInstance(context);
-        return TournamentsRepository.getInstance(FakeTournamentsRemoteDataSource.getInstance(),
-                TournamentsLocalDataSource.getInstance(
-//                    new AppExecutors(),
-//                        database.taskDao()
-                ));
-    }
+  public static TournamentsRepository provideTournamentsRepository(@NonNull Context context) {
+    checkNotNull(context);
+    return TournamentsRepository.getInstance(TournamentsFBDataSource.getInstance());
+  }
+
+  public static TeamsRepository provideTeamsRepository() {
+    return TeamsRepository.getInstance(TeamsFBDataSource.getInstance());
+  }
+
+
 }

@@ -23,7 +23,7 @@
 
         <variable
             name="viewmodel"
-            type="com.tournament.helper.create.AddTournamentViewModel"/>
+            type="com.tournament.helper.create.CreateTournamentViewModel"/>
     </data>
 
     <com.tournament.helper.ScrollChildSwipeRefreshLayout
@@ -33,7 +33,7 @@
         app:enabled="@{viewmodel.dataLoading}"
         app:refreshing="@{viewmodel.dataLoading}">
 
-        <ScrollView
+        <android.support.v4.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
@@ -55,16 +55,13 @@
                     android:maxLines="1"
                     android:text="@={viewmodel.title}"
                     android:textAppearance="@style/TextAppearance.AppCompat.Title"/>
+                <android.support.v7.widget.RecyclerView
+                  android:id="@+id/create_tournament_teams"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"/>
 
-                <EditText
-                    android:id="@+id/add_task_description"
-                    android:layout_width="match_parent"
-                    android:layout_height="350dp"
-                    android:gravity="top"
-                    android:hint="hint description temp"
-                    android:text="@={viewmodel.description}"/>
-
+                <!--app:items="@{viewmodel.items}"-->
             </LinearLayout>
-        </ScrollView>
+        </android.support.v4.widget.NestedScrollView>
     </com.tournament.helper.ScrollChildSwipeRefreshLayout>
 </layout>

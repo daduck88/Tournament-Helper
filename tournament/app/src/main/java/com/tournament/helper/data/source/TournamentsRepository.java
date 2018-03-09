@@ -41,9 +41,7 @@ public class TournamentsRepository implements TournamentsDataSource {
 
     private static TournamentsRepository INSTANCE = null;
 
-    private final TournamentsDataSource mTournamentsRemoteDataSource;
-
-    private final TournamentsDataSource mTournamentsLocalDataSource;
+    private final TournamentsDataSource mTournamentsFBDataSource;
 
     /**
      * This variable has package local visibility so it can be accessed from tests.
@@ -57,29 +55,25 @@ public class TournamentsRepository implements TournamentsDataSource {
     boolean mCacheIsDirty = false;
 
     // Prevent direct instantiation.
-    private TournamentsRepository(@NonNull TournamentsDataSource tournamentsRemoteDataSource,
-                            @NonNull TournamentsDataSource tournamentsLocalDataSource) {
-        mTournamentsRemoteDataSource = checkNotNull(tournamentsRemoteDataSource);
-        mTournamentsLocalDataSource = checkNotNull(tournamentsLocalDataSource);
+    private TournamentsRepository(@NonNull TournamentsDataSource tournamentsFBDataSource) {
+        mTournamentsFBDataSource = checkNotNull(tournamentsFBDataSource);
     }
 
     /**
      * Returns the single instance of this class, creating it if necessary.
      *
-     * @param tournamentsRemoteDataSource the backend data source
-     * @param tournamentsLocalDataSource  the device storage data source
+     * @param tournamentsFBDataSource the backend data source
      * @return the {@link TournamentsRepository} instance
      */
-    public static TournamentsRepository getInstance(TournamentsDataSource tournamentsRemoteDataSource,
-                                              TournamentsDataSource tournamentsLocalDataSource) {
+    public static TournamentsRepository getInstance(TournamentsDataSource tournamentsFBDataSource) {
         if (INSTANCE == null) {
-            INSTANCE = new TournamentsRepository(tournamentsRemoteDataSource, tournamentsLocalDataSource);
+            INSTANCE = new TournamentsRepository(tournamentsFBDataSource);
         }
         return INSTANCE;
     }
 
     /**
-     * Used to force {@link #getInstance(TournamentsDataSource, TournamentsDataSource)} to create a new instance
+     * Used to force {@link #getInstance(TournamentsDataSource)} to create a new instance
      * next time it's called.
      */
     public static void destroyInstance() {
@@ -102,32 +96,13 @@ public class TournamentsRepository implements TournamentsDataSource {
             callback.onTournamentsLoaded(new ArrayList<>(mCachedTournaments.values()));
             return;
         }
-
-        if (mCacheIsDirty) {
-            // If the cache is dirty we need to fetch new data from the network.
-            getTournamentsFromRemoteDataSource(callback);
-        } else {
-            // Query the local storage if available. If not, query the network.
-            mTournamentsLocalDataSource.getTournaments(new LoadTournamentsCallback() {
-                @Override
-                public void onTournamentsLoaded(List<Tournament> Tournaments) {
-                    refreshCache(Tournaments);
-                    callback.onTournamentsLoaded(new ArrayList<>(mCachedTournaments.values()));
-                }
-
-                @Override
-                public void onDataNotAvailable() {
-                    getTournamentsFromRemoteDataSource(callback);
-                }
-            });
-        }
+        getTournamentsFromRemoteDataSource(callback);
     }
 
     @Override
     public void saveTournament(@NonNull Tournament tournament) {
         checkNotNull(tournament);
-        mTournamentsRemoteDataSource.saveTournament(tournament);
-        mTournamentsLocalDataSource.saveTournament(tournament);
+        mTournamentsFBDataSource.saveTournament(tournament);
 
         // Do in memory cache update to keep the app UI up to date
         if (mCachedTournaments == null) {
@@ -139,8 +114,7 @@ public class TournamentsRepository implements TournamentsDataSource {
     @Override
     public void completeTournament(@NonNull Tournament tournament) {
         checkNotNull(tournament);
-        mTournamentsRemoteDataSource.completeTournament(tournament);
-        mTournamentsLocalDataSource.completeTournament(tournament);
+        mTournamentsFBDataSource.completeTournament(tournament);
 
         Tournament completedTournament = new Tournament(tournament.getTitle(), tournament.getDescription(), tournament.getId(), true);
 
@@ -160,8 +134,7 @@ public class TournamentsRepository implements TournamentsDataSource {
     @Override
     public void activateTournament(@NonNull Tournament tournament) {
         checkNotNull(tournament);
-        mTournamentsRemoteDataSource.activateTournament(tournament);
-        mTournamentsLocalDataSource.activateTournament(tournament);
+        mTournamentsFBDataSource.activateTournament(tournament);
 
         Tournament activeTournament = new Tournament(tournament.getTitle(), tournament.getDescription(), tournament.getId());
 
@@ -180,8 +153,7 @@ public class TournamentsRepository implements TournamentsDataSource {
 
     @Override
     public void clearCompletedTournaments() {
-        mTournamentsRemoteDataSource.clearCompletedTournaments();
-        mTournamentsLocalDataSource.clearCompletedTournaments();
+        mTournamentsFBDataSource.clearCompletedTournaments();
 
         // Do in memory cache update to keep the app UI up to date
         if (mCachedTournaments == null) {
@@ -219,7 +191,8 @@ public class TournamentsRepository implements TournamentsDataSource {
         // Load from server/persisted if needed.
 
         // Is the Tournament in the local data source? If not, query the network.
-        mTournamentsLocalDataSource.getTournament(tournamentId, new GetTournamentCallback() {
+
+        mTournamentsFBDataSource.getTournament(tournamentId, new GetTournamentCallback() {
             @Override
             public void onTournamentLoaded(Tournament Tournament) {
                 // Do in memory cache update to keep the app UI up to date
@@ -232,22 +205,7 @@ public class TournamentsRepository implements TournamentsDataSource {
 
             @Override
             public void onDataNotAvailable() {
-                mTournamentsRemoteDataSource.getTournament(tournamentId, new GetTournamentCallback() {
-                    @Override
-                    public void onTournamentLoaded(Tournament Tournament) {
-                        // Do in memory cache update to keep the app UI up to date
-                        if (mCachedTournaments == null) {
-                            mCachedTournaments = new LinkedHashMap<>();
-                        }
-                        mCachedTournaments.put(Tournament.getId(), Tournament);
-                        callback.onTournamentLoaded(Tournament);
-                    }
-
-                    @Override
-                    public void onDataNotAvailable() {
-                        callback.onDataNotAvailable();
-                    }
-                });
+                callback.onDataNotAvailable();
             }
         });
     }
@@ -259,8 +217,7 @@ public class TournamentsRepository implements TournamentsDataSource {
 
     @Override
     public void deleteAllTournaments() {
-        mTournamentsRemoteDataSource.deleteAllTournaments();
-        mTournamentsLocalDataSource.deleteAllTournaments();
+        mTournamentsFBDataSource.deleteAllTournaments();
 
         if (mCachedTournaments == null) {
             mCachedTournaments = new LinkedHashMap<>();
@@ -270,18 +227,16 @@ public class TournamentsRepository implements TournamentsDataSource {
 
     @Override
     public void deleteTournament(@NonNull String tournamentId) {
-        mTournamentsRemoteDataSource.deleteTournament(checkNotNull(tournamentId));
-        mTournamentsLocalDataSource.deleteTournament(checkNotNull(tournamentId));
+        mTournamentsFBDataSource.deleteTournament(checkNotNull(tournamentId));
 
         mCachedTournaments.remove(tournamentId);
     }
 
     private void getTournamentsFromRemoteDataSource(@NonNull final LoadTournamentsCallback callback) {
-        mTournamentsRemoteDataSource.getTournaments(new LoadTournamentsCallback() {
+        mTournamentsFBDataSource.getTournaments(new LoadTournamentsCallback() {
             @Override
             public void onTournamentsLoaded(List<Tournament> Tournaments) {
                 refreshCache(Tournaments);
-                refreshLocalDataSource(Tournaments);
                 callback.onTournamentsLoaded(new ArrayList<>(mCachedTournaments.values()));
             }
 
@@ -301,13 +256,6 @@ public class TournamentsRepository implements TournamentsDataSource {
             mCachedTournaments.put(Tournament.getId(), Tournament);
         }
         mCacheIsDirty = false;
-    }
-
-    private void refreshLocalDataSource(List<Tournament> tournaments) {
-        mTournamentsLocalDataSource.deleteAllTournaments();
-        for (Tournament Tournament : tournaments) {
-            mTournamentsLocalDataSource.saveTournament(Tournament);
-        }
     }
 
     @Nullable

@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-package com.tournament.helper;
+package com.tournament.helper.utils.binding;
 
 import android.databinding.BindingAdapter;
 import android.support.v4.widget.SwipeRefreshLayout;
 
+import com.tournament.helper.ScrollChildSwipeRefreshLayout;
 import com.tournament.helper.tournaments.TournamentsViewModel;
 
 public class SwipeRefreshLayoutDataBinding {
-//TODO move to a databinding package
 
     /**
      * Reloads the data when the pull-to-refresh is triggered.

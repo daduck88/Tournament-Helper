@@ -20,21 +20,26 @@ import android.content.Context;
 import android.databinding.ObservableBoolean;
 import android.databinding.ObservableField;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 
 import com.tournament.helper.R;
+import com.tournament.helper.data.Team;
 import com.tournament.helper.data.Tournament;
+import com.tournament.helper.data.source.TeamsDataSource;
+import com.tournament.helper.data.source.TeamsRepository;
 import com.tournament.helper.data.source.TournamentsDataSource;
 import com.tournament.helper.data.source.TournamentsRepository;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
- * ViewModel for the Add/Edit screen.
+ * ViewModel for the Create screen.
  * <p>
  * This ViewModel only exposes {@link ObservableField}s, so it doesn't need to extend
- * {@link android.databinding.BaseObservable} and updates are notified automatically. See
- * {@link com.example.android.architecture.blueprints.todoapp.statistics.StatisticsViewModel} for
- * how to deal with more complex scenarios.
+ * {@link android.databinding.BaseObservable} and updates are notified automatically.
  */
-public class AddTournamentViewModel implements TournamentsDataSource.GetTournamentCallback {
+public class CreateTournamentViewModel implements TournamentsDataSource.GetTournamentCallback {
 
     public final ObservableField<String> title = new ObservableField<>();
 
@@ -46,7 +51,11 @@ public class AddTournamentViewModel implements TournamentsDataSource.GetTourname
 
     private final TournamentsRepository mTournamentsRepository;
 
+    private final TeamsRepository mTeamsRepository;
+
     private final Context mContext;  // To avoid leaks, this must be an Application Context.
+
+    List<Team> selectedTeams = new ArrayList<>();
 
     @Nullable
     private String mTournamentId;
@@ -57,9 +66,10 @@ public class AddTournamentViewModel implements TournamentsDataSource.GetTourname
 
     private AddTournamentNavigator mAddTournamentNavigator;
 
-    AddTournamentViewModel(Context context, TournamentsRepository tasksRepository) {
+    CreateTournamentViewModel(Context context, TournamentsRepository tournamentsRepository, TeamsRepository teamsRepository) {
         mContext = context.getApplicationContext(); // Force use of Application Context.
-        mTournamentsRepository = tasksRepository;
+        mTournamentsRepository = tournamentsRepository;
+        mTeamsRepository = teamsRepository;
     }
 
     void onActivityCreated(AddTournamentNavigator navigator) {
@@ -107,13 +117,32 @@ public class AddTournamentViewModel implements TournamentsDataSource.GetTourname
         dataLoading.set(false);
     }
 
-    // Called when clicking on fab.
+    // Called when clicking menu "create".
     public void saveTournament() {
-        if (isNewTournament()) {
-            createTournament(title.get(), description.get());
+        if(isTournamentReady()) {
+            if(isNewTournament()) {
+                createTournament(title.get(), description.get());
+            } else {
+                updateTournament(title.get(), description.get());
+            }
         } else {
-            updateTournament(title.get(), description.get());
+//          Show errors
         }
+    }
+
+    private boolean isTournamentReady() {
+        snackbarText.set("");
+        if(TextUtils.isEmpty(title.get())){
+
+            //show empty title
+            snackbarText.set("empty Title temp");
+            return false;
+        }
+        if(selectedTeams.size() != 8){
+            snackbarText.set("Select al the 8n teams temp");
+            return false;
+        }
+        return true;
     }
 
     @Nullable
@@ -148,4 +177,9 @@ public class AddTournamentViewModel implements TournamentsDataSource.GetTourname
             mAddTournamentNavigator.onTournamentSaved();
         }
     }
+
+    public List<Team> getSelectedTeams() {
+        return selectedTeams;
+    }
+
 }

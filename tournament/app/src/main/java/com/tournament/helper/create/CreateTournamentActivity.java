@@ -30,7 +30,7 @@ import com.tournament.helper.utils.ActivityUtils;
 /**
  * Displays an add or edit task screen.
  */
-public class AddTournamentActivity extends AppCompatActivity implements AddTournamentNavigator {
+public class CreateTournamentActivity extends AppCompatActivity implements AddTournamentNavigator {
 
     public static final int REQUEST_CODE = 1;
 
@@ -38,7 +38,7 @@ public class AddTournamentActivity extends AppCompatActivity implements AddTourn
 
     public static final String ADD_EDIT_VIEWMODEL_TAG = "ADD_EDIT_VIEWMODEL_TAG";
 
-    private AddTournamentViewModel mViewModel;
+    private CreateTournamentViewModel mViewModel;
 
     @Override
     public boolean onSupportNavigateUp() {
@@ -69,12 +69,12 @@ public class AddTournamentActivity extends AppCompatActivity implements AddTourn
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setDisplayShowHomeEnabled(true);
 
-        AddTournamentFragment addTournamentFragment = findOrCreateViewFragment();
+        CreateTournamentFragment createTournamentFragment = findOrCreateViewFragment();
 
         mViewModel = findOrCreateViewModel();
 
         // Link View and ViewModel
-        addTournamentFragment.setViewModel(mViewModel);
+        createTournamentFragment.setViewModel(mViewModel);
 
         mViewModel.onActivityCreated(this);
     }
@@ -86,32 +86,32 @@ public class AddTournamentActivity extends AppCompatActivity implements AddTourn
     }
 
     @NonNull
-    private AddTournamentFragment findOrCreateViewFragment() {
+    private CreateTournamentFragment findOrCreateViewFragment() {
         // View Fragment
-        AddTournamentFragment addTournamentFragment = (AddTournamentFragment) getSupportFragmentManager()
+        CreateTournamentFragment createTournamentFragment = (CreateTournamentFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.contentFrame);
 
-        if (addTournamentFragment == null) {
-            addTournamentFragment = AddTournamentFragment.newInstance();
+        if (createTournamentFragment == null) {
+            createTournamentFragment = CreateTournamentFragment.newInstance();
 
             // Send the task ID to the fragment
             Bundle bundle = new Bundle();
-            bundle.putString(AddTournamentFragment.ARGUMENT_EDIT_TASK_ID,
-                    getIntent().getStringExtra(AddTournamentFragment.ARGUMENT_EDIT_TASK_ID));
-            addTournamentFragment.setArguments(bundle);
+            bundle.putString(CreateTournamentFragment.ARGUMENT_EDIT_TASK_ID,
+                    getIntent().getStringExtra(CreateTournamentFragment.ARGUMENT_EDIT_TASK_ID));
+            createTournamentFragment.setArguments(bundle);
 
             ActivityUtils.addFragmentToActivity(getSupportFragmentManager(),
-                addTournamentFragment, R.id.contentFrame);
+                createTournamentFragment, R.id.contentFrame);
         }
-        return addTournamentFragment;
+        return createTournamentFragment;
     }
 
-    private AddTournamentViewModel findOrCreateViewModel() {
+    private CreateTournamentViewModel findOrCreateViewModel() {
         // In a configuration change we might have a ViewModel present. It's retained using the
         // Fragment Manager.
         @SuppressWarnings("unchecked")
-        ViewModelHolder<AddTournamentViewModel> retainedViewModel =
-                (ViewModelHolder<AddTournamentViewModel>) getSupportFragmentManager()
+        ViewModelHolder<CreateTournamentViewModel> retainedViewModel =
+                (ViewModelHolder<CreateTournamentViewModel>) getSupportFragmentManager()
                         .findFragmentByTag(ADD_EDIT_VIEWMODEL_TAG);
 
         if (retainedViewModel != null && retainedViewModel.getViewmodel() != null) {
@@ -119,10 +119,10 @@ public class AddTournamentActivity extends AppCompatActivity implements AddTourn
             return retainedViewModel.getViewmodel();
         } else {
             // There is no ViewModel yet, create it.
-            AddTournamentViewModel viewModel = new AddTournamentViewModel(
+            CreateTournamentViewModel viewModel = new CreateTournamentViewModel(
                     getApplicationContext(),
-                    Injection.provideTournamentsRepository(getApplicationContext())
-            );
+                    Injection.provideTournamentsRepository(getApplicationContext()),
+                Injection.provideTeamsRepository());
 
             // and bind it to this Activity's lifecycle using the Fragment Manager.
             ActivityUtils.addFragmentToActivity(
