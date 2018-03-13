@@ -16,29 +16,23 @@
 
 package com.tournament.helper.create;
 
-import android.content.Context;
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;
 import android.databinding.Observable;
 import android.databinding.ObservableField;
-import android.databinding.generated.callback.OnClickListener;
 import android.support.annotation.Nullable;
 
 import com.tournament.helper.R;
 import com.tournament.helper.THApp;
+import com.tournament.helper.create.dialog.AddTeamDialog;
 import com.tournament.helper.data.Team;
-import com.tournament.helper.data.Tournament;
 import com.tournament.helper.data.helper.SelectTeam;
 import com.tournament.helper.data.source.TeamsDataSource;
 import com.tournament.helper.data.source.TeamsRepository;
-import com.tournament.helper.data.source.TournamentsDataSource;
-import com.tournament.helper.data.source.TournamentsRepository;
-import com.tournament.helper.mock.TeamMock;
-import com.tournament.helper.tournaments.TournamentItemNavigator;
 import com.tournament.helper.tournaments.TournamentsFragment;
+import com.tournament.helper.utils.DataHelpers.TeamsHelper;
 
 import java.lang.ref.WeakReference;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -47,150 +41,169 @@ import java.util.List;
  */
 public class SelectTeamItemViewModel extends BaseObservable {
 
-    public final ObservableField<String> title = new ObservableField<>();
+  public final ObservableField<String> title = new ObservableField<>();
 
-    private final ObservableField<SelectTeam> selectTeamObservable = new ObservableField<>();
-    private final TeamsRepository mTeamsRepository;
+  private final ObservableField<SelectTeam> selectTeamObservable = new ObservableField<>();
+  private final TeamsRepository mTeamsRepository;
 
-    private CreateTournamentViewModel mCreateTournamentViewModel;
+  private CreateTournamentViewModel mCreateTournamentViewModel;
 
-    private boolean mIsDataLoading;
+  private boolean mIsDataLoading;
 
+  public SelectTeamItemViewModel(SelectTeam selectTeam, CreateTournamentViewModel createTournamentViewModel, TeamsRepository teamsRepository) {
+    selectTeamObservable.set(selectTeam);
+    this.mCreateTournamentViewModel = createTournamentViewModel;
+    this.mTeamsRepository = teamsRepository;
 
-    public SelectTeamItemViewModel(SelectTeam selectTeam, CreateTournamentViewModel createTournamentViewModel, TeamsRepository teamsRepository) {
-        selectTeamObservable.set(selectTeam);
-        this.mCreateTournamentViewModel = createTournamentViewModel;
-        this.mTeamsRepository = teamsRepository;
-
-        // Exposed observables depend on the selectTeamObservable observable:
-        selectTeamObservable.addOnPropertyChangedCallback(new OnPropertyChangedCallback() {
-            @Override
-            public void onPropertyChanged(Observable observable, int i) {
-                SelectTeam task = selectTeamObservable.get();
-                if (task != null && task.getTeam() != null) {
-                    title.set(task.getTeam().getTitle());
-                } else {
-                    title.set(THApp.context.getString(R.string.create_tournament_select_team));
-                }
-            }
-        });
-    }
-
-    public void start(String taskId) {
-        if (taskId != null) {
-            mIsDataLoading = true;
-//            mTournamentsRepository.getTournament(taskId, this);//TODO check this
+    // Exposed observables depend on the selectTeamObservable observable:
+    selectTeamObservable.addOnPropertyChangedCallback(new OnPropertyChangedCallback() {
+      @Override
+      public void onPropertyChanged(Observable observable, int i) {
+        SelectTeam task = selectTeamObservable.get();
+        if(task != null && task.getTeam() != null) {
+          title.set(task.getTeam().getTitle());
+        } else {
+          title.set(THApp.context.getString(R.string.create_tournament_select_team));
         }
-    }
+      }
+    });
+  }
 
-    public void setTournament(SelectTeam task) {//TODO check this
-        selectTeamObservable.set(task);
+  public void start(String taskId) {
+    if(taskId != null) {
+      mIsDataLoading = true;
+      //            mTournamentsRepository.getTournament(taskId, this);//TODO check this
     }
+  }
 
-    @Bindable
-    public boolean isDataAvailable() {
-        return selectTeamObservable.get() != null;
+  public void setTournament(SelectTeam task) {//TODO check this
+    selectTeamObservable.set(task);
+  }
+
+  @Bindable
+  public boolean isDataAvailable() {
+    return selectTeamObservable.get() != null;
+  }
+
+  @Bindable
+  public boolean isDataLoading() {
+    return mIsDataLoading;
+  }
+
+  // This could be an observable, but we save a call to Tournament.getTitleForList() if not needed.
+  @Bindable
+  public String getTitleForList() {
+    if(selectTeamObservable.get() == null || selectTeamObservable.get().getTeam() == null) {
+      return "No data";
     }
+    return selectTeamObservable.get().getTeam().getTitle();
+  }
 
-    @Bindable
-    public boolean isDataLoading() {
-        return mIsDataLoading;
+  //    @Override
+  //    public void onTournamentLoaded(SelectTeam task) {//TODO check this
+  //        selectTeamObservable.set(task);
+  //        mIsDataLoading = false;
+  //        notifyChange(); // For the @Bindable properties
+  //    }
+  //
+  //    @Override
+  //    public void onDataNotAvailable() {
+  //        selectTeamObservable.set(null);
+  //        mIsDataLoading = false;
+  //    }
+
+  public void onRefresh() {
+    if(selectTeamObservable.get() != null) {
+      //            start(selectTeamObservable.get().getId());
+      //TODO check if this is needed
     }
+  }
 
-    // This could be an observable, but we save a call to Tournament.getTitleForList() if not needed.
-    @Bindable
-    public String getTitleForList() {
-        if (selectTeamObservable.get() == null || selectTeamObservable.get().getTeam() == null) {
-            return "No data";
+  @Nullable
+  protected String getTeamtId() {
+    return selectTeamObservable.get().getTeam().getId();
+  }
+
+  // This navigator is s wrapped in a WeakReference to avoid leaks because it has references to an
+  // activity. There's no straightforward way to clear it for each item in a list adapter.
+  @Nullable
+  private WeakReference<AddTournamentNavigator> mNavigator;
+
+  public void setNavigator(AddTournamentNavigator navigator) {
+    mNavigator = new WeakReference<>(navigator);
+  }
+
+  /**
+   * Called by the Data Binding library when the row is clicked.
+   * TODO check this click
+   */
+  public void taskClicked() {
+    //        selectTeam(freeTeams);
+    //        mCreateTournamentViewModel.selectTeam();
+    //        String taskId = getTournamentId();
+    //        if (taskId == null) {
+    //            // Click happened before task was loaded, no-op.
+    //            return;
+    //        }
+    //        if (mNavigator != null && mNavigator.get() != null) {
+    //            mNavigator.get().openTournamentDetails(taskId);
+    //        }
+    mCreateTournamentViewModel.getSelectedTeams().remove(selectTeamObservable.get().getTeam());
+    //TODO check this, podible bug if the dialog (select team is cancelled
+
+    mTeamsRepository.getTeams(new TeamsDataSource.LoadTeamsCallback() {
+      @Override
+      public void onTeamsLoaded(List<Team> teams) {
+        List<Team> freeTeams = TeamsHelper.freeTeams(mCreateTournamentViewModel.getSelectedTeams(), teams);
+        if(freeTeams.isEmpty()) {
+          showAddDialog();
+        } else {
+          selectTeam(freeTeams);
         }
-        return selectTeamObservable.get().getTeam().getTitle();
+      }
+
+      @Override
+      public void onDataNotAvailable() {
+
+      }
+    });
+  }
+
+  private void selectTeam(List<Team> freeTeams) {
+    //        onTeamSelectCallback
+    //Add dialog
+    showAddDialog();
+  }
+
+  private void showAddDialog() {
+    mNavigator.get().onAddTeam(addTeamListener);
+    //        Team newTeam = TeamMock.getTeamWithout(mCreateTournamentViewModel.getSelectedTeams(), teams);
+  }
+
+  AddTeamDialog.AddTeamListener addTeamListener = new AddTeamDialog.AddTeamListener() {
+    @Override
+    public void onAddTeam(String title) {
+      addTeam(new Team(title));
     }
+  };
 
-//    @Override
-//    public void onTournamentLoaded(SelectTeam task) {//TODO check this
-//        selectTeamObservable.set(task);
-//        mIsDataLoading = false;
-//        notifyChange(); // For the @Bindable properties
-//    }
-//
-//    @Override
-//    public void onDataNotAvailable() {
-//        selectTeamObservable.set(null);
-//        mIsDataLoading = false;
-//    }
+  private void addTeam(Team newTeam) {
+    mTeamsRepository.saveTeam(newTeam, new TeamsDataSource.SaveTeamCallback() {
+      @Override
+      public void onTeamSaved(Team team) {
+        mCreateTournamentViewModel.getSelectedTeams().add(team);
+        selectTeamObservable.get().setTeam(team);
+        notifyChange();
+      }
 
-    public void onRefresh() {
-        if (selectTeamObservable.get() != null) {
-//            start(selectTeamObservable.get().getId());
-            //TODO check if this is needed
-        }
-    }
+      @Override
+      public void onSaveNotAvailable() {
 
+      }
+    });
+  }
 
-    @Nullable
-    protected String getTeamtId() {
-        return selectTeamObservable.get().getTeam().getId();
-    }
-
-    // This navigator is s wrapped in a WeakReference to avoid leaks because it has references to an
-    // activity. There's no straightforward way to clear it for each item in a list adapter.
-    @Nullable
-    private WeakReference<TournamentItemNavigator> mNavigator;
-
-    public void setNavigator(TournamentItemNavigator navigator) {
-        mNavigator = new WeakReference<>(navigator);
-    }
-
-    /**
-     * Called by the Data Binding library when the row is clicked.
-     * TODO check this click
-     */
-    public void taskClicked() {
-        selectTeam();
-//        mCreateTournamentViewModel.selectTeam();
-//        String taskId = getTournamentId();
-//        if (taskId == null) {
-//            // Click happened before task was loaded, no-op.
-//            return;
-//        }
-//        if (mNavigator != null && mNavigator.get() != null) {
-//            mNavigator.get().openTournamentDetails(taskId);
-//        }
-    }
-
-    private void selectTeam() {
-//        onTeamSelectCallback
-        //Add dialog
-        mCreateTournamentViewModel.getSelectedTeams().remove(selectTeamObservable.get().getTeam());
-
-        mTeamsRepository.getTeams(new TeamsDataSource.LoadTeamsCallback() {
-            @Override
-            public void onTeamsLoaded(List<Team> teams) {
-                Team newTeam = TeamMock.getTeamWithout(mCreateTournamentViewModel.getSelectedTeams(), teams);
-                mTeamsRepository.saveTeam(newTeam, new TeamsDataSource.SaveTeamCallback() {
-                    @Override
-                    public void onTeamSaved(Team team) {
-                        mCreateTournamentViewModel.getSelectedTeams().add(team);
-                        selectTeamObservable.get().setTeam(team);
-                        notifyChange();
-                    }
-                    @Override
-                    public void onSaveNotAvailable() {
-
-                    }
-                });
-            }
-            @Override
-            public void onDataNotAvailable() {
-
-            }
-        });
-
-
-
-    }
-
-    public interface OnTeamSelectCallback{
-        void onTeamSelected(Team team);
-    }
+  public interface OnTeamSelectCallback {
+    void onTeamSelected(Team team);
+  }
 }

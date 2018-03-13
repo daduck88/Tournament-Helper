@@ -25,6 +25,7 @@ import android.support.v7.widget.Toolbar;
 import com.tournament.helper.Injection;
 import com.tournament.helper.R;
 import com.tournament.helper.ViewModelHolder;
+import com.tournament.helper.create.dialog.AddTeamDialog;
 import com.tournament.helper.utils.ActivityUtils;
 
 /**
@@ -55,6 +56,16 @@ public class CreateTournamentActivity extends AppCompatActivity implements AddTo
     public void onTournamentSaved() {
         setResult(ADD_EDIT_RESULT_OK);
         finish();
+    }
+
+    @Override
+    public void onSelectTeam() {
+
+    }
+
+    @Override
+    public void onAddTeam(AddTeamDialog.AddTeamListener addTeamListener) {
+        AddTeamDialog.newInstance().launchAddTeamDialog(getSupportFragmentManager(), addTeamListener);
     }
 
     @Override

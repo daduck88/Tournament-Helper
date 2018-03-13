@@ -97,13 +97,14 @@ public class CreateTournamentFragment extends Fragment {
         listView.setLayoutManager(new LinearLayoutManager(getActivity()));
         // init selectTeam list
         ArrayList<SelectTeam> selectTeams = new ArrayList<>();
-        for(int count = 0; count < 8; count++) {
+        for(int count = 0; count < 18; count++) {
             selectTeams.add(new SelectTeam());
         }
         listView.setAdapter(new SelectTeamsAdapter(
             selectTeams,
             mViewModel,
-            Injection.provideTeamsRepository()));
+            Injection.provideTeamsRepository(),
+            (CreateTournamentActivity) getActivity()));//navigator
     }
 
     @Nullable

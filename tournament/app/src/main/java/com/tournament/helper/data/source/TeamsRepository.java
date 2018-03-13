@@ -89,6 +89,7 @@ public class TeamsRepository implements TeamsDataSource {
     @Override
     public void getTeams(@NonNull final LoadTeamsCallback callback) {
         checkNotNull(callback);
+
         // Respond immediately with cache if available and not dirty
         if (mCachedTeams != null && !mCacheIsDirty) {
             callback.onTeamsLoaded(new ArrayList<>(mCachedTeams.values()));
@@ -98,17 +99,20 @@ public class TeamsRepository implements TeamsDataSource {
     }
 
     @Override
-    public void saveTeam(@NonNull Team team, @NonNull SaveTeamCallback callback) {
+    public void saveTeam(@NonNull Team team, @NonNull final SaveTeamCallback callback) {
         checkNotNull(team);
         if(team.getId() == null) {
             mTeamsFBDataSource.saveTeam(team, new SaveTeamCallback() {
                 @Override
                 public void onTeamSaved(Team team) {
-                    // Do in memory cache update to keep the app UI up to date
                     if (mCachedTeams == null) {
                         mCachedTeams = new LinkedHashMap<>();
                     }
-                    mCachedTeams.put(team.getId(), team);
+                    // Do in memory cache update to keep the app UI up to date
+                    if(!mCachedTeams.containsKey(team.getId())) {
+                        mCachedTeams.put(team.getId(), team);
+                    }
+                    callback.onTeamSaved(team);
                 }
 
                 @Override

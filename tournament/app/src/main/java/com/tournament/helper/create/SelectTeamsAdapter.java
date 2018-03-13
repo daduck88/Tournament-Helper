@@ -34,15 +34,17 @@ public class SelectTeamsAdapter extends RecyclerView.Adapter<SelectTeamsAdapter.
 
   private CreateTournamentViewModel mCreateTournamentViewModel;
   private final TeamsRepository mTeamsRepository;
+  private final AddTournamentNavigator mNavigator;
 
   private List<SelectTeam> selectTeams;
 
-  public SelectTeamsAdapter(List<SelectTeam> tasks,
+  public SelectTeamsAdapter(List<SelectTeam> selectTeams,
                             CreateTournamentViewModel tasksViewModel,
-                            TeamsRepository teamsRepository) {
+                            TeamsRepository teamsRepository, AddTournamentNavigator navigator) {
     mCreateTournamentViewModel = tasksViewModel;
     mTeamsRepository = teamsRepository;
-    setList(tasks);
+    mNavigator = navigator;
+    setList(selectTeams);
 
   }
 
@@ -117,7 +119,6 @@ public class SelectTeamsAdapter extends RecyclerView.Adapter<SelectTeamsAdapter.
 //    return binding.getRoot();
 //  }
 
-
   private void setList(List<SelectTeam> selectTeams) {
     this.selectTeams = selectTeams;
     notifyDataSetChanged();
@@ -131,7 +132,9 @@ public class SelectTeamsAdapter extends RecyclerView.Adapter<SelectTeamsAdapter.
       this.binding = binding;
     }
     public void bind(SelectTeam selectTeam){
-      binding.setViewmodel(new SelectTeamItemViewModel(selectTeam, mCreateTournamentViewModel, mTeamsRepository));//todo u
+      SelectTeamItemViewModel vModel = new SelectTeamItemViewModel(selectTeam, mCreateTournamentViewModel, mTeamsRepository);
+      vModel.setNavigator(mNavigator);
+      binding.setViewmodel(vModel);//todo u
     }
   }
 }

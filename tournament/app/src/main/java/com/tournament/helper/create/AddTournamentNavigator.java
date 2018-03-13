@@ -16,10 +16,16 @@
 
 package com.tournament.helper.create;
 
+import com.tournament.helper.create.dialog.AddTeamDialog;
+
 /**
  * Defines the navigation actions that can be called from the Add/Edit screen.
  */
 interface AddTournamentNavigator {
 
     void onTournamentSaved();
+
+    void onSelectTeam();// select team dialog listener
+
+    void onAddTeam(AddTeamDialog.AddTeamListener addTeamListener);
 }
