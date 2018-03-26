@@ -168,7 +168,7 @@ public class CreateTournamentViewModel implements TournamentsDataSource.GetTourn
         if (isNewTournament()) {
             throw new RuntimeException("updateTournament() was called but task is new.");
         }
-        mTournamentsRepository.saveTournament(new Tournament(title, description, mTournamentId));
+        mTournamentsRepository.updateTournament(new Tournament(title, description, mTournamentId));
         navigateOnTournamentSaved(); // After an edit, go back to the list.
     }
 

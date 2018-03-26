@@ -20,6 +20,7 @@ package com.tournament.helper.data.source;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.tournament.helper.data.Team;
 import com.tournament.helper.data.Tournament;
 
 import java.util.ArrayList;
@@ -100,9 +101,32 @@ public class TournamentsRepository implements TournamentsDataSource {
     }
 
     @Override
-    public void saveTournament(@NonNull Tournament tournament) {
+    public void saveTournament(@NonNull Tournament tournament, @NonNull final SaveTournamentCallback callback) {
         checkNotNull(tournament);
-        mTournamentsFBDataSource.saveTournament(tournament);
+        mTournamentsFBDataSource.saveTournament(tournament, new SaveTournamentCallback() {
+            @Override
+            public void onTournamentSaved(Tournament tournament) {
+                if (mCachedTournaments == null) {
+                    mCachedTournaments = new LinkedHashMap<>();
+                }
+                // Do in memory cache update to keep the app UI up to date
+                if(!mCachedTournaments.containsKey(tournament.getId())) {
+                    mCachedTournaments.put(tournament.getId(), tournament);
+                }
+                callback.onTournamentSaved(tournament);
+            }
+
+            @Override
+            public void onSaveNotAvailable() {
+                callback.onSaveNotAvailable();
+            }
+        });
+    }
+
+    @Override
+    public void updateTournament(@NonNull Tournament tournament, @NonNull SaveTournamentCallback callback) {
+        checkNotNull(tournament);
+        mTournamentsFBDataSource.updateTournament(tournament, callback);
 
         // Do in memory cache update to keep the app UI up to date
         if (mCachedTournaments == null) {
@@ -116,13 +140,13 @@ public class TournamentsRepository implements TournamentsDataSource {
         checkNotNull(tournament);
         mTournamentsFBDataSource.completeTournament(tournament);
 
-        Tournament completedTournament = new Tournament(tournament.getTitle(), tournament.getDescription(), tournament.getId(), true);
+//        Tournament completedTournament = new Tournament(tournament.getTitle(), tournament.getDescription(), tournament.getId(), true);
 
         // Do in memory cache update to keep the app UI up to date
         if (mCachedTournaments == null) {
             mCachedTournaments = new LinkedHashMap<>();
         }
-        mCachedTournaments.put(tournament.getId(), completedTournament);
+        mCachedTournaments.put(tournament.getId(), tournament);
     }
 
     @Override
@@ -136,13 +160,13 @@ public class TournamentsRepository implements TournamentsDataSource {
         checkNotNull(tournament);
         mTournamentsFBDataSource.activateTournament(tournament);
 
-        Tournament activeTournament = new Tournament(tournament.getTitle(), tournament.getDescription(), tournament.getId());
+//        Tournament activeTournament = new Tournament(tournament.getTitle(), tournament.getDescription(), tournament.getId());
 
         // Do in memory cache update to keep the app UI up to date
         if (mCachedTournaments == null) {
             mCachedTournaments = new LinkedHashMap<>();
         }
-        mCachedTournaments.put(tournament.getId(), activeTournament);
+        mCachedTournaments.put(tournament.getId(), tournament);
     }
 
     @Override
@@ -162,7 +186,7 @@ public class TournamentsRepository implements TournamentsDataSource {
         Iterator<Map.Entry<String, Tournament>> it = mCachedTournaments.entrySet().iterator();
         while (it.hasNext()) {
             Map.Entry<String, Tournament> entry = it.next();
-            if (entry.getValue().isCompleted()) {
+            if (false) {
                 it.remove();
             }
         }

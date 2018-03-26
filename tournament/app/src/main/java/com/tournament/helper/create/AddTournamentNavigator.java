@@ -17,15 +17,19 @@
 package com.tournament.helper.create;
 
 import com.tournament.helper.create.dialog.AddTeamDialog;
+import com.tournament.helper.create.dialog.SelectTeamDialog;
+import com.tournament.helper.data.Team;
+
+import java.util.List;
 
 /**
  * Defines the navigation actions that can be called from the Add/Edit screen.
  */
-interface AddTournamentNavigator {
+public interface AddTournamentNavigator {
 
     void onTournamentSaved();
 
-    void onSelectTeam();// select team dialog listener
+    void onSelectTeam(List<Team> teams, SelectTeamDialog.SelectTeamListener selectTeamListener);// select team dialog listener
 
     void onAddTeam(AddTeamDialog.AddTeamListener addTeamListener);
 }

@@ -1,26 +1,14 @@
 package com.tournament.helper.create;
 
 import android.databinding.DataBindingUtil;
-import android.databinding.Observable;
-import android.databinding.ViewDataBinding;
-import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 
 import com.tournament.helper.R;
-import com.tournament.helper.data.Tournament;
 import com.tournament.helper.data.helper.SelectTeam;
 import com.tournament.helper.data.source.TeamsRepository;
-import com.tournament.helper.data.source.TournamentsRepository;
 import com.tournament.helper.databinding.SelectTeamItemBinding;
-import com.tournament.helper.databinding.TournamentItemBinding;
-import com.tournament.helper.tournaments.TournamentItemNavigator;
-import com.tournament.helper.tournaments.TournamentItemViewModel;
-import com.tournament.helper.tournaments.TournamentsActivity;
-import com.tournament.helper.tournaments.TournamentsViewModel;
 
 import java.util.List;
 
@@ -30,7 +18,7 @@ import java.util.List;
 
 
 
-public class SelectTeamsAdapter extends RecyclerView.Adapter<SelectTeamsAdapter.BindingHolder> {
+public class CreateTournamentTeamsAdapter extends RecyclerView.Adapter<CreateTournamentTeamsAdapter.BindingHolder> {
 
   private CreateTournamentViewModel mCreateTournamentViewModel;
   private final TeamsRepository mTeamsRepository;
@@ -38,9 +26,9 @@ public class SelectTeamsAdapter extends RecyclerView.Adapter<SelectTeamsAdapter.
 
   private List<SelectTeam> selectTeams;
 
-  public SelectTeamsAdapter(List<SelectTeam> selectTeams,
-                            CreateTournamentViewModel tasksViewModel,
-                            TeamsRepository teamsRepository, AddTournamentNavigator navigator) {
+  public CreateTournamentTeamsAdapter(List<SelectTeam> selectTeams,
+                                      CreateTournamentViewModel tasksViewModel,
+                                      TeamsRepository teamsRepository, AddTournamentNavigator navigator) {
     mCreateTournamentViewModel = tasksViewModel;
     mTeamsRepository = teamsRepository;
     mNavigator = navigator;
@@ -102,7 +90,7 @@ public class SelectTeamsAdapter extends RecyclerView.Adapter<SelectTeamsAdapter.
 //        mTournamentsRepository
 //    );
 //
-//    viewmodel.setNavigator(mTournamentItemNavigator);
+//    viewmodel.setListener(mTournamentItemNavigator);
 //
 //    binding.setViewmodel(viewmodel);
 //    // To save on PropertyChangedCallbacks, wire the item's snackbar text observable to the
@@ -114,7 +102,7 @@ public class SelectTeamsAdapter extends RecyclerView.Adapter<SelectTeamsAdapter.
 //            mCreateTournamentViewModel.snackbarText.set(viewmodel.getSnackbarText());
 //          }
 //        });
-//    viewmodel.setTournament(selectTeam);
+//    viewmodel.setTeam(selectTeam);
 //
 //    return binding.getRoot();
 //  }

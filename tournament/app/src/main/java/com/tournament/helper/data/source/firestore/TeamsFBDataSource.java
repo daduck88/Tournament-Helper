@@ -29,6 +29,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.tournament.helper.Injection;
 import com.tournament.helper.data.Team;
 import com.tournament.helper.data.source.TeamsDataSource;
 
@@ -44,6 +45,8 @@ import java.util.Map;
 public class TeamsFBDataSource implements TeamsDataSource {
 
     private static final String TAG = "TAG TEAMSFBDataSource";
+    private static final String TEAMS = "teams";
+
     private static TeamsFBDataSource INSTANCE;
 
     private static final Map<String, Team> TASKS_SERVICE_DATA = new LinkedHashMap<>();
@@ -52,6 +55,7 @@ public class TeamsFBDataSource implements TeamsDataSource {
     // Prevent direct instantiation.
     private TeamsFBDataSource() {
         mDB = FirebaseFirestore.getInstance();
+        mDB.setFirestoreSettings(Injection.provideFirebaseSettings());
     }
 
     public static TeamsFBDataSource getInstance() {
@@ -64,7 +68,7 @@ public class TeamsFBDataSource implements TeamsDataSource {
     @Override
     public void getTeams(@NonNull final LoadTeamsCallback callback) {
 //        callback.onTeamsLoaded(Lists.newArrayList(TASKS_SERVICE_DATA.values()));
-        mDB.collection("teams")
+        mDB.collection(TEAMS)
             .get()
             .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                 @Override
@@ -98,7 +102,7 @@ public class TeamsFBDataSource implements TeamsDataSource {
     @Override
     public void saveTeam(@NonNull final Team team, @NonNull final SaveTeamCallback callback) {
         TASKS_SERVICE_DATA.put(team.getId(), team);
-        mDB.collection("teams")
+        mDB.collection(TEAMS)
             .add(team)
             .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                 @Override

@@ -18,15 +18,12 @@ package com.tournament.helper.utils.binding;
 
 import android.databinding.BindingAdapter;
 import android.support.v7.widget.RecyclerView;
-import android.widget.BaseAdapter;
 import android.widget.ListView;
 
-import com.tournament.helper.create.SelectTeamsAdapter;
-import com.tournament.helper.data.Team;
+import com.tournament.helper.create.CreateTournamentTeamsAdapter;
 import com.tournament.helper.data.Tournament;
 import com.tournament.helper.data.helper.SelectTeam;
 import com.tournament.helper.tournaments.TournamentsAdapter;
-import com.tournament.helper.tournaments.TournamentsFragment;
 
 import java.util.List;
 
@@ -56,8 +53,8 @@ public class TournamentsListBindings {
         if(teams == null)
             return;
 
-        if(adapter instanceof SelectTeamsAdapter){
-            ((SelectTeamsAdapter)adapter).replaceData(teams);
+        if(adapter instanceof CreateTournamentTeamsAdapter){
+            ((CreateTournamentTeamsAdapter)adapter).replaceData(teams);
         }
     }
 }

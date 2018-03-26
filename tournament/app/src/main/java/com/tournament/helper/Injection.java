@@ -19,6 +19,7 @@ package com.tournament.helper;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
+import com.google.firebase.firestore.FirebaseFirestoreSettings;
 import com.tournament.helper.data.source.TeamsRepository;
 import com.tournament.helper.data.source.TournamentsDataSource;
 import com.tournament.helper.data.source.TournamentsRepository;
@@ -27,7 +28,8 @@ import com.tournament.helper.data.source.firestore.TournamentsFBDataSource;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-/** TODO check this doc
+/**
+ * TODO check this doc
  * Enables injection of mock implementations for
  * {@link TournamentsDataSource} at compile time. This is useful for testing, since it allows us to use
  * a fake instance of the class to isolate the dependencies and run a test hermetically.
@@ -43,5 +45,14 @@ public class Injection {
     return TeamsRepository.getInstance(TeamsFBDataSource.getInstance());
   }
 
+  private static FirebaseFirestoreSettings settings;
 
+  public static FirebaseFirestoreSettings provideFirebaseSettings() {
+    if(settings == null) {
+      settings = new FirebaseFirestoreSettings.Builder()
+          .setPersistenceEnabled(true)
+          .build();
+    }
+    return settings;
+  }
 }

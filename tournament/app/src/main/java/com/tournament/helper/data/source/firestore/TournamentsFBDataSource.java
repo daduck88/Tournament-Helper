@@ -18,9 +18,15 @@ package com.tournament.helper.data.source.firestore;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
+import android.util.Log;
 
+import com.google.android.gms.tasks.Continuation;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.common.collect.Lists;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.tournament.helper.Injection;
 import com.tournament.helper.data.Tournament;
 import com.tournament.helper.data.source.TeamsDataSource;
 import com.tournament.helper.data.source.TournamentsDataSource;
@@ -29,10 +35,14 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import static android.content.ContentValues.TAG;
+
 /**
  * Implementation of a remote data source with static access to the data for easy testing.
  */
 public class TournamentsFBDataSource implements TournamentsDataSource {
+
+    private static final String TOURNAMENTS = "tournaments";
 
     private static TournamentsFBDataSource INSTANCE;
 
@@ -41,7 +51,9 @@ public class TournamentsFBDataSource implements TournamentsDataSource {
 
     // Prevent direct instantiation.
     private TournamentsFBDataSource() {
+        //TODO check if this parameter should be received
         mDB = FirebaseFirestore.getInstance();
+        mDB.setFirestoreSettings(Injection.provideFirebaseSettings());
     }
 
     public static TournamentsFBDataSource getInstance() {
@@ -63,14 +75,45 @@ public class TournamentsFBDataSource implements TournamentsDataSource {
     }
 
     @Override
-    public void saveTournament(@NonNull Tournament task) {
-        TASKS_SERVICE_DATA.put(task.getId(), task);
+    public void saveTournament(@NonNull final Tournament tournament, @NonNull final SaveTournamentCallback callback) {
+        TASKS_SERVICE_DATA.put(tournament.getId(), tournament);
+        mDB.collection(TOURNAMENTS)
+            .add(tournament.getMap())
+            .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                @Override
+                public void onSuccess(DocumentReference documentReference) {
+                    Log.d(TAG, "DocumentSnapshot written with ID: " + documentReference.getId());
+                    tournament.setId(documentReference.getId());
+                    callback.onTournamentSaved(tournament);
+                }
+            })
+            .addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Log.w(TAG, "Error adding document", e);
+                }
+            });
+    }
+
+    @Override
+    public void updateTournament(@NonNull final Tournament tournament, @NonNull final SaveTournamentCallback callback) {
+        TASKS_SERVICE_DATA.put(tournament.getId(), tournament);
+        mDB.collection(TOURNAMENTS)
+            .document(tournament.getId())
+            .set(tournament.getMap())
+            .addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    callback.onSaveNotAvailable();
+                    Log.w(TAG, "Error adding document", e);
+                }
+            });
     }
 
     @Override
     public void completeTournament(@NonNull Tournament task) {
-        Tournament completedTournament = new Tournament(task.getTitle(), task.getDescription(), task.getId(), true);
-        TASKS_SERVICE_DATA.put(task.getId(), completedTournament);
+//        Tournament completedTournament = new Tournament(task.getTitle(), task.getDescription(), task.getId(), true);
+        TASKS_SERVICE_DATA.put(task.getId(), task);
     }
 
     @Override
@@ -80,8 +123,8 @@ public class TournamentsFBDataSource implements TournamentsDataSource {
 
     @Override
     public void activateTournament(@NonNull Tournament task) {
-        Tournament activeTournament = new Tournament(task.getTitle(), task.getDescription(), task.getId());
-        TASKS_SERVICE_DATA.put(task.getId(), activeTournament);
+//        Tournament activeTournament = new Tournament(task.getTitle(), task.getDescription(), task.getId());
+        TASKS_SERVICE_DATA.put(task.getId(), task);
     }
 
     @Override
@@ -94,7 +137,7 @@ public class TournamentsFBDataSource implements TournamentsDataSource {
         Iterator<Map.Entry<String, Tournament>> it = TASKS_SERVICE_DATA.entrySet().iterator();
         while (it.hasNext()) {
             Map.Entry<String, Tournament> entry = it.next();
-            if (entry.getValue().isCompleted()) {
+            if (false) {
                 it.remove();
             }
         }

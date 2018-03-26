@@ -25,6 +25,7 @@ import android.support.annotation.Nullable;
 import com.tournament.helper.R;
 import com.tournament.helper.THApp;
 import com.tournament.helper.create.dialog.AddTeamDialog;
+import com.tournament.helper.create.dialog.SelectTeamDialog;
 import com.tournament.helper.data.Team;
 import com.tournament.helper.data.helper.SelectTeam;
 import com.tournament.helper.data.source.TeamsDataSource;
@@ -140,7 +141,7 @@ public class SelectTeamItemViewModel extends BaseObservable {
   public void taskClicked() {
     //        selectTeam(freeTeams);
     //        mCreateTournamentViewModel.selectTeam();
-    //        String taskId = getTournamentId();
+    //        String taskId = getTeamId();
     //        if (taskId == null) {
     //            // Click happened before task was loaded, no-op.
     //            return;
@@ -149,7 +150,7 @@ public class SelectTeamItemViewModel extends BaseObservable {
     //            mNavigator.get().openTournamentDetails(taskId);
     //        }
     mCreateTournamentViewModel.getSelectedTeams().remove(selectTeamObservable.get().getTeam());
-    //TODO check this, podible bug if the dialog (select team is cancelled
+    //TODO check this, possible bug if the dialog (select team is cancelled
 
     mTeamsRepository.getTeams(new TeamsDataSource.LoadTeamsCallback() {
       @Override
@@ -164,7 +165,7 @@ public class SelectTeamItemViewModel extends BaseObservable {
 
       @Override
       public void onDataNotAvailable() {
-
+        //TODO Show not connection or something
       }
     });
   }
@@ -172,7 +173,20 @@ public class SelectTeamItemViewModel extends BaseObservable {
   private void selectTeam(List<Team> freeTeams) {
     //        onTeamSelectCallback
     //Add dialog
-    showAddDialog();
+//    showAddDialog();
+    mNavigator.get().onSelectTeam(freeTeams, new SelectTeamDialog.SelectTeamListener() {
+      @Override
+      public void onTeamSelected(Team team) {
+        mCreateTournamentViewModel.getSelectedTeams().add(team);
+        selectTeamObservable.get().setTeam(team);
+        notifyChange();
+      }
+
+      @Override
+      public void onAddTeamClick() {
+        showAddDialog();
+      }
+    });
   }
 
   private void showAddDialog() {

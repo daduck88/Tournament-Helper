@@ -21,8 +21,8 @@ import com.tournament.helper.R;
 public class AddTeamDialog extends DialogFragment {
 
   private AddTeamListener mListener;
-  private EditText AddTeamTitle;
-  private View AddTeamBttn;
+  private EditText mAddTeamTitle;
+  private View mAddTeamBttn;
 
   @NonNull
   public static AddTeamDialog newInstance() {
@@ -49,13 +49,13 @@ public class AddTeamDialog extends DialogFragment {
   }
 
   private void setupViews(View view) {
-    AddTeamTitle = view.findViewById(R.id.add_team_title_inpt);
-    AddTeamBttn = view.findViewById(R.id.add_team_bttn);
+    mAddTeamTitle = view.findViewById(R.id.add_team_title_inpt);
+    mAddTeamBttn = view.findViewById(R.id.add_team_bttn);
 
-    AddTeamBttn.setOnClickListener(new View.OnClickListener() {
+    mAddTeamBttn.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        String title = AddTeamTitle.getText().toString();
+        String title = mAddTeamTitle.getText().toString();
         if(TextUtils.isEmpty(title)){
           Toast.makeText(getContext(), "Set Some title to your Team", Toast.LENGTH_SHORT).show();
           return;

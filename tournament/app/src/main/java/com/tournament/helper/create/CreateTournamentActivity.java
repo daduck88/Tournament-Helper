@@ -26,7 +26,11 @@ import com.tournament.helper.Injection;
 import com.tournament.helper.R;
 import com.tournament.helper.ViewModelHolder;
 import com.tournament.helper.create.dialog.AddTeamDialog;
+import com.tournament.helper.create.dialog.SelectTeamDialog;
+import com.tournament.helper.data.Team;
 import com.tournament.helper.utils.ActivityUtils;
+
+import java.util.List;
 
 /**
  * Displays an add or edit task screen.
@@ -59,8 +63,8 @@ public class CreateTournamentActivity extends AppCompatActivity implements AddTo
     }
 
     @Override
-    public void onSelectTeam() {
-
+    public void onSelectTeam(List<Team> teamId, SelectTeamDialog.SelectTeamListener selectTeamListener) {
+        SelectTeamDialog.newInstance(teamId).launchSelectTeamDialog(getSupportFragmentManager(), selectTeamListener);
     }
 
     @Override

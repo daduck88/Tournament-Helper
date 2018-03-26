@@ -18,6 +18,7 @@ package com.tournament.helper.data.source;
 
 import android.support.annotation.NonNull;
 
+import com.tournament.helper.data.Team;
 import com.tournament.helper.data.Tournament;
 
 import java.util.List;
@@ -41,11 +42,20 @@ public interface TournamentsDataSource {
         void onDataNotAvailable();
     }
 
+    interface SaveTournamentCallback {
+
+        void onTournamentSaved(Tournament tournament);
+
+        void onSaveNotAvailable();
+    }
+
     void getTournaments(@NonNull LoadTournamentsCallback callback);
 
     void getTournament(@NonNull String TournamentId, @NonNull GetTournamentCallback callback);
 
-    void saveTournament(@NonNull Tournament Tournament);
+    void saveTournament(@NonNull Tournament Tournament, @NonNull SaveTournamentCallback callback);
+
+    void updateTournament(@NonNull Tournament Tournament, @NonNull SaveTournamentCallback callback);
 
     void completeTournament(@NonNull Tournament Tournament);
 
