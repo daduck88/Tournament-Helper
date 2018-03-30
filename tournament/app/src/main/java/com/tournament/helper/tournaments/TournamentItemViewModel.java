@@ -46,7 +46,7 @@ public class TournamentItemViewModel extends TournamentViewModel {
     /**
      * Called by the Data Binding library when the row is clicked.
      */
-    public void taskClicked() {
+    public void tournamentClicked() {
         String taskId = getTournamentId();
         if (taskId == null) {
             // Click happened before task was loaded, no-op.

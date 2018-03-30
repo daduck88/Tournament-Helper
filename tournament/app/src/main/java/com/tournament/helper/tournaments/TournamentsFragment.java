@@ -23,6 +23,8 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -193,8 +195,9 @@ public class TournamentsFragment extends Fragment {
     }
 
     private void setupListAdapter() {
-        ListView listView =  mTournamentsFragBinding.tournamentsList;
+        RecyclerView listView =  mTournamentsFragBinding.tournamentsList;
 
+        listView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mListAdapter = new TournamentsAdapter(
                 new ArrayList<Tournament>(0),
                 (TournamentsActivity) getActivity(),
@@ -204,7 +207,7 @@ public class TournamentsFragment extends Fragment {
     }
 
     private void setupRefreshLayout() {
-        ListView listView =  mTournamentsFragBinding.tournamentsList;
+        RecyclerView listView =  mTournamentsFragBinding.tournamentsList;
         final ScrollChildSwipeRefreshLayout swipeRefreshLayout = mTournamentsFragBinding.refreshLayout;
         swipeRefreshLayout.setColorSchemeColors(
                 ContextCompat.getColor(getActivity(), R.color.colorPrimary),

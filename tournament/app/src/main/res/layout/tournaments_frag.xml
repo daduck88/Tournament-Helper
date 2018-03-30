@@ -44,7 +44,7 @@
       android:clickable="true"
       android:orientation="vertical">
 
-      <ListView
+      <android.support.v7.widget.RecyclerView
         android:id="@+id/tournaments_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -79,7 +79,7 @@
           android:layout_width="wrap_content"
           android:layout_height="48dp"
           android:layout_gravity="center"
-          android:background="@drawable/touch_feedback"
+          android:foreground="@drawable/accent_ripple"
           android:gravity="center"
           android:onClick="@{() -> viewmodel.addNewTournament()}"
           android:text="no tournament temp"

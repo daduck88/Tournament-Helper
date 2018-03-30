@@ -34,7 +34,7 @@ public class TournamentsListBindings {
 
     @SuppressWarnings("unchecked")
     @BindingAdapter("app:items")
-    public static void setItems(ListView listView, List<Tournament> items) {
+    public static void setItems(RecyclerView listView, List<Tournament> items) {
         TournamentsAdapter adapter = (TournamentsAdapter) listView.getAdapter();
         if (adapter != null)
         {
