@@ -22,10 +22,8 @@ import android.databinding.ObservableField;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
-import com.tournament.helper.R;
 import com.tournament.helper.data.Team;
 import com.tournament.helper.data.Tournament;
-import com.tournament.helper.data.source.TeamsDataSource;
 import com.tournament.helper.data.source.TeamsRepository;
 import com.tournament.helper.data.source.TournamentsDataSource;
 import com.tournament.helper.data.source.TournamentsRepository;
@@ -41,145 +39,138 @@ import java.util.List;
  */
 public class CreateTournamentViewModel implements TournamentsDataSource.GetTournamentCallback {
 
-    public final ObservableField<String> title = new ObservableField<>();
+  public final ObservableField<String> title = new ObservableField<>();
 
-    public final ObservableField<String> description = new ObservableField<>();
+  public final ObservableBoolean dataLoading = new ObservableBoolean(false);
 
-    public final ObservableBoolean dataLoading = new ObservableBoolean(false);
+  public final ObservableField<String> snackbarText = new ObservableField<>();
 
-    public final ObservableField<String> snackbarText = new ObservableField<>();
+  private final TournamentsRepository mTournamentsRepository;
 
-    private final TournamentsRepository mTournamentsRepository;
+  List<Team> selectedTeams = new ArrayList<>();
 
-    private final TeamsRepository mTeamsRepository;
+  @Nullable
+  private String mTournamentId;
 
-    private final Context mContext;  // To avoid leaks, this must be an Application Context.
+  private boolean mIsNewTournament;
 
-    List<Team> selectedTeams = new ArrayList<>();
+  private boolean mIsDataLoaded = false;
 
-    @Nullable
-    private String mTournamentId;
+  private AddTournamentNavigator mAddTournamentNavigator;
 
-    private boolean mIsNewTournament;
+  CreateTournamentViewModel(TournamentsRepository tournamentsRepository) {
+    mTournamentsRepository = tournamentsRepository;
+  }
 
-    private boolean mIsDataLoaded = false;
+  void onActivityCreated(AddTournamentNavigator navigator) {
+    mAddTournamentNavigator = navigator;
+  }
 
-    private AddTournamentNavigator mAddTournamentNavigator;
+  void onActivityDestroyed() {
+    // Clear references to avoid potential memory leaks.
+    mAddTournamentNavigator = null;
+  }
 
-    CreateTournamentViewModel(Context context, TournamentsRepository tournamentsRepository, TeamsRepository teamsRepository) {
-        mContext = context.getApplicationContext(); // Force use of Application Context.
-        mTournamentsRepository = tournamentsRepository;
-        mTeamsRepository = teamsRepository;
+  public void start(String taskId) {
+    if(dataLoading.get()) {
+      // Already loading, ignore.
+      return;
     }
-
-    void onActivityCreated(AddTournamentNavigator navigator) {
-        mAddTournamentNavigator = navigator;
+    mTournamentId = taskId;
+    if(taskId == null) {
+      // No need to populate, it's a new task
+      mIsNewTournament = true;
+      return;
     }
-
-    void onActivityDestroyed() {
-        // Clear references to avoid potential memory leaks.
-        mAddTournamentNavigator = null;
+    if(mIsDataLoaded) {
+      // No need to populate, already have data.
+      return;
     }
+    mIsNewTournament = false;
+    dataLoading.set(true);
+    mTournamentsRepository.getTournament(taskId, this);
+  }
 
-    public void start(String taskId) {
-        if (dataLoading.get()) {
-            // Already loading, ignore.
-            return;
-        }
-        mTournamentId = taskId;
-        if (taskId == null) {
-            // No need to populate, it's a new task
-            mIsNewTournament = true;
-            return;
-        }
-        if (mIsDataLoaded) {
-            // No need to populate, already have data.
-            return;
-        }
-        mIsNewTournament = false;
-        dataLoading.set(true);
-        mTournamentsRepository.getTournament(taskId, this);
+  @Override
+  public void onTournamentLoaded(Tournament task) {
+    title.set(task.getTitle());
+    dataLoading.set(false);
+    mIsDataLoaded = true;
+
+    // Note that there's no need to notify that the values changed because we're using
+    // ObservableFields.
+  }
+
+  @Override
+  public void onDataNotAvailable() {
+    dataLoading.set(false);
+  }
+
+  // Called when clicking menu "create".
+  public void saveTournament() {
+    if(isTournamentReady()) {
+      if(isNewTournament()) {
+        createTournament(title.get(), selectedTeams);
+      } else {
+        updateTournament(title.get(), selectedTeams);
+      }
+    }
+  }
+
+  private boolean isTournamentReady() {
+    if(TextUtils.isEmpty(title.get())) {
+      snackbarText.set("empty Title temp");
+      return false;
+    }
+    if(selectedTeams.size() != 8) {
+      snackbarText.set("Select all the 8 teams temp");
+      return false;
+    }
+    return true;
+  }
+
+  @Nullable
+  public String getSnackbarText() {
+    return snackbarText.get();
+  }
+
+  private boolean isNewTournament() {
+    return mIsNewTournament;
+  }
+
+  private void createTournament(String title, List<Team> teamList) {
+    Tournament newTournament = new Tournament(title, teamList);
+    mTournamentsRepository.saveTournament(newTournament, mSaveTournamentCallback);
+  }
+
+  private void updateTournament(String title, List<Team> teamList) {
+    //        TODO check to let update tournament
+    if(isNewTournament()) {
+      throw new RuntimeException("updateTournament() was called but task is new.");
+    }
+    //        mTournamentsRepository.updateTournament(new Tournament(title, description, mTournamentId));
+    navigateOnTournamentSaved(); // After an edit, go back to the list.
+  }
+
+  private void navigateOnTournamentSaved() {
+    if(mAddTournamentNavigator != null) {
+      mAddTournamentNavigator.onTournamentSaved();
+    }
+  }
+
+  public List<Team> getSelectedTeams() {
+    return selectedTeams;
+  }
+
+  private TournamentsDataSource.SaveTournamentCallback mSaveTournamentCallback = new TournamentsDataSource.SaveTournamentCallback() {
+    @Override
+    public void onTournamentSaved(Tournament tournament) {
+      navigateOnTournamentSaved();
     }
 
     @Override
-    public void onTournamentLoaded(Tournament task) {
-        title.set(task.getTitle());
-        description.set(task.getDescription());
-        dataLoading.set(false);
-        mIsDataLoaded = true;
-
-        // Note that there's no need to notify that the values changed because we're using
-        // ObservableFields.
+    public void onSaveNotAvailable() {
+      //Check what to do
     }
-
-    @Override
-    public void onDataNotAvailable() {
-        dataLoading.set(false);
-    }
-
-    // Called when clicking menu "create".
-    public void saveTournament() {
-        if(isTournamentReady()) {
-            if(isNewTournament()) {
-                createTournament(title.get(), description.get());
-            } else {
-                updateTournament(title.get(), description.get());
-            }
-        } else {
-//          Show errors
-        }
-    }
-
-    private boolean isTournamentReady() {
-        snackbarText.set("");
-        if(TextUtils.isEmpty(title.get())){
-
-            //show empty title
-            snackbarText.set("empty Title temp");
-            return false;
-        }
-        if(selectedTeams.size() != 8){
-            snackbarText.set("Select al the 8n teams temp");
-            return false;
-        }
-        return true;
-    }
-
-    @Nullable
-    public String getSnackbarText() {
-        return snackbarText.get();
-    }
-
-    private boolean isNewTournament() {
-        return mIsNewTournament;
-    }
-
-    private void createTournament(String title, String description) {
-        Tournament newTournament = new Tournament(title, description);
-        if (newTournament.isEmpty()) {
-            snackbarText.set(mContext.getString(R.string.empty_task_message));
-        } else {
-            mTournamentsRepository.saveTournament(newTournament);
-            navigateOnTournamentSaved();
-        }
-    }
-
-    private void updateTournament(String title, String description) {
-        if (isNewTournament()) {
-            throw new RuntimeException("updateTournament() was called but task is new.");
-        }
-        mTournamentsRepository.updateTournament(new Tournament(title, description, mTournamentId));
-        navigateOnTournamentSaved(); // After an edit, go back to the list.
-    }
-
-    private void navigateOnTournamentSaved() {
-        if (mAddTournamentNavigator != null) {
-            mAddTournamentNavigator.onTournamentSaved();
-        }
-    }
-
-    public List<Team> getSelectedTeams() {
-        return selectedTeams;
-    }
-
+  };
 }

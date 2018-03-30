@@ -153,7 +153,12 @@ public class CreateTournamentFragment extends Fragment {
             @Override
             public void onPropertyChanged(Observable observable, int i) {
                 if(!TextUtils.isEmpty(mViewModel.getSnackbarText())) {
-                    SnackbarUtils.showSnackbar(getView(), mViewModel.getSnackbarText());
+                    SnackbarUtils.showSnackbar(getView(), mViewModel.getSnackbarText(), new SnackbarUtils.UtilsCallback() {
+                        @Override
+                        public void onDismissed() {
+                            mViewModel.snackbarText.set(null);
+                        }
+                    });
                 }
             }
         };

@@ -41,7 +41,7 @@ public class CreateTournamentActivity extends AppCompatActivity implements AddTo
 
     public static final int ADD_EDIT_RESULT_OK = RESULT_FIRST_USER + 1;
 
-    public static final String ADD_EDIT_VIEWMODEL_TAG = "ADD_EDIT_VIEWMODEL_TAG";
+    public static final String ADD_EDIT_VIEW_MODEL_TAG = "ADD_EDIT_VIEW_MODEL_TAG";
 
     private CreateTournamentViewModel mViewModel;
 
@@ -51,7 +51,7 @@ public class CreateTournamentActivity extends AppCompatActivity implements AddTo
         return true;
     }
 
-//    @VisibleForTesting TODO expreso
+//    @VisibleForTesting TODO expresso
 //    public IdlingResource getCountingIdlingResource() {
 //        return EspressoIdlingResource.getIdlingResource();
 //    }
@@ -127,7 +127,7 @@ public class CreateTournamentActivity extends AppCompatActivity implements AddTo
         @SuppressWarnings("unchecked")
         ViewModelHolder<CreateTournamentViewModel> retainedViewModel =
                 (ViewModelHolder<CreateTournamentViewModel>) getSupportFragmentManager()
-                        .findFragmentByTag(ADD_EDIT_VIEWMODEL_TAG);
+                        .findFragmentByTag(ADD_EDIT_VIEW_MODEL_TAG);
 
         if (retainedViewModel != null && retainedViewModel.getViewmodel() != null) {
             // If the model was retained, return it.
@@ -135,15 +135,13 @@ public class CreateTournamentActivity extends AppCompatActivity implements AddTo
         } else {
             // There is no ViewModel yet, create it.
             CreateTournamentViewModel viewModel = new CreateTournamentViewModel(
-                    getApplicationContext(),
-                    Injection.provideTournamentsRepository(getApplicationContext()),
-                Injection.provideTeamsRepository());
+                Injection.provideTournamentsRepository(getApplicationContext()));
 
             // and bind it to this Activity's lifecycle using the Fragment Manager.
             ActivityUtils.addFragmentToActivity(
                     getSupportFragmentManager(),
                     ViewModelHolder.createContainer(viewModel),
-                    ADD_EDIT_VIEWMODEL_TAG);
+                ADD_EDIT_VIEW_MODEL_TAG);
             return viewModel;
         }
     }

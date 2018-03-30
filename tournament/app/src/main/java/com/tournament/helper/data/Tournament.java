@@ -16,8 +16,8 @@ public class Tournament {
   private String title;
   private List<Team> teams;
   private List<Team> activeTeams;
-  private List<Team> teamsId;
-  private List<Team> activeTeamsId;
+  private List<String> teamsId;
+  private List<String> activeTeamsId;
 
   public Tournament() {//used by DocumentSnapshot
   }
@@ -60,19 +60,19 @@ public class Tournament {
     this.activeTeams = activeTeams;
   }
 
-  public List<Team> getTeamsId() {
+  public List<String> getTeamsId() {
     return teamsId;
   }
 
-  public void setTeamsId(List<Team> teamsId) {
+  public void setTeamsId(List<String> teamsId) {
     this.teamsId = teamsId;
   }
 
-  public List<Team> getActiveTeamsId() {
+  public List<String> getActiveTeamsId() {
     return activeTeamsId;
   }
 
-  public void setActiveTeamsId(List<Team> activeTeamsId) {
+  public void setActiveTeamsId(List<String> activeTeamsId) {
     this.activeTeamsId = activeTeamsId;
   }
 
@@ -82,7 +82,7 @@ public class Tournament {
 
   public Map<String, Object> getMap(){
     Map<String, Object> tournamentMap = new HashMap<>();
-    if(TextUtils.isEmpty(id))
+    if(!TextUtils.isEmpty(id))
       tournamentMap.put("id", id);
     tournamentMap.put("title", title);
     tournamentMap.put("teamsId", getTeamsArrayIds(teams));
@@ -98,5 +98,13 @@ public class Tournament {
       i++;
     }
     return Arrays.asList(teamIds);
+  }
+
+  /**
+   * show the current status of the tournament based on the current active teams
+   * @return
+   */
+  public String getDescription() {
+    return "started Tournament";
   }
 }

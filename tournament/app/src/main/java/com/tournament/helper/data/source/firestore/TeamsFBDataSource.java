@@ -49,7 +49,6 @@ public class TeamsFBDataSource implements TeamsDataSource {
 
     private static TeamsFBDataSource INSTANCE;
 
-    private static final Map<String, Team> TASKS_SERVICE_DATA = new LinkedHashMap<>();
     FirebaseFirestore mDB;
 
     // Prevent direct instantiation.
@@ -67,7 +66,6 @@ public class TeamsFBDataSource implements TeamsDataSource {
 
     @Override
     public void getTeams(@NonNull final LoadTeamsCallback callback) {
-//        callback.onTeamsLoaded(Lists.newArrayList(TASKS_SERVICE_DATA.values()));
         mDB.collection(TEAMS)
             .get()
             .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -101,7 +99,6 @@ public class TeamsFBDataSource implements TeamsDataSource {
 
     @Override
     public void saveTeam(@NonNull final Team team, @NonNull final SaveTeamCallback callback) {
-        TASKS_SERVICE_DATA.put(team.getId(), team);
         mDB.collection(TEAMS)
             .add(team)
             .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
@@ -129,7 +126,8 @@ public class TeamsFBDataSource implements TeamsDataSource {
     public void addTeams(Team... tasks) {
         if (tasks != null) {
             for (Team task : tasks) {
-                TASKS_SERVICE_DATA.put(task.getId(), task);
+//                TASKS_SERVICE_DATA.put(task.getId(), task);
+                //todo check if it needed to implement
             }
         }
     }

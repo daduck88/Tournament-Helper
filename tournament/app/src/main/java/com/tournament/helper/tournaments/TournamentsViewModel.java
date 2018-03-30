@@ -27,6 +27,7 @@ import android.graphics.drawable.Drawable;
 
 import com.tournament.helper.BR;
 import com.tournament.helper.R;
+import com.tournament.helper.create.CreateTournamentActivity;
 import com.tournament.helper.data.Tournament;
 import com.tournament.helper.data.source.TournamentsDataSource;
 import com.tournament.helper.data.source.TournamentsRepository;
@@ -47,8 +48,6 @@ public class TournamentsViewModel extends BaseObservable {
     public final ObservableList<Tournament> items = new ObservableArrayList<>();
 
     public final ObservableBoolean dataLoading = new ObservableBoolean(false);
-
-    public final ObservableField<String> currentFilteringLabel = new ObservableField<>();
 
     public final ObservableField<String> noTournamentsLabel = new ObservableField<>();
 
@@ -98,42 +97,6 @@ public class TournamentsViewModel extends BaseObservable {
         loadTournaments(forceUpdate, true);
     }
 
-//    /**
-//     * Sets the current tournament filtering type.
-//     *
-//     * @param requestType Can be {@link TournamentsFilterType#ALL_TASKS},
-//     *                    {@link TournamentsFilterType#COMPLETED_TASKS}, or
-//     *                    {@link TournamentsFilterType#ACTIVE_TASKS}
-//     */
-//    public void setFiltering(TournamentsFilterType requestType) {
-//        mCurrentFiltering = requestType;
-//
-//        // Depending on the filter type, set the filtering label, icon drawables, etc.
-//        switch (requestType) {
-//            case ALL_TASKS:
-//                currentFilteringLabel.set(mContext.getString(R.string.label_all));
-//                noTournamentsLabel.set(mContext.getResources().getString(R.string.no_tournaments_all));
-//                noTournamentIconRes.set(mContext.getResources().getDrawable(
-//                        R.drawable.ic_assignment_turned_in_24dp));
-//                tournamentsAddViewVisible.set(true);
-//                break;
-//            case ACTIVE_TASKS:
-//                currentFilteringLabel.set(mContext.getString(R.string.label_active));
-//                noTournamentsLabel.set(mContext.getResources().getString(R.string.no_tournaments_active));
-//                noTournamentIconRes.set(mContext.getResources().getDrawable(
-//                        R.drawable.ic_check_circle_24dp));
-//                tournamentsAddViewVisible.set(false);
-//                break;
-//            case COMPLETED_TASKS:
-//                currentFilteringLabel.set(mContext.getString(R.string.label_completed));
-//                noTournamentsLabel.set(mContext.getResources().getString(R.string.no_tournaments_completed));
-//                noTournamentIconRes.set(mContext.getResources().getDrawable(
-//                        R.drawable.ic_verified_user_24dp));
-//                tournamentsAddViewVisible.set(false);
-//                break;
-//        }
-//    }
-
     public void clearCompletedTournaments() {
         mTournamentsRepository.clearCompletedTournaments();
         snackbarText.set(mContext.getString(R.string.completed_tournament_cleared));
@@ -154,22 +117,22 @@ public class TournamentsViewModel extends BaseObservable {
     }
 
     void handleActivityResult(int requestCode, int resultCode) {
-//        if (AddEditTournamentActivity.REQUEST_CODE == requestCode) {
-//            switch (resultCode) {
+        if (CreateTournamentActivity.REQUEST_CODE == requestCode) {
+            switch (resultCode) {
 //                case TournamentDetailActivity.EDIT_RESULT_OK:
 //                    snackbarText.set(
 //                            mContext.getString(R.string.successfully_saved_tournament_message));
 //                    break;
-//                case AddEditTournamentActivity.ADD_EDIT_RESULT_OK:
-//                    snackbarText.set(
+                case CreateTournamentActivity.ADD_EDIT_RESULT_OK:
+                    snackbarText.set("tournament created");
 //                            mContext.getString(R.string.successfully_added_tournament_message));
-//                    break;
+                    break;
 //                case TournamentDetailActivity.DELETE_RESULT_OK:
 //                    snackbarText.set(
 //                            mContext.getString(R.string.successfully_deleted_tournament_message));
 //                    break;
-//            }
-//        }
+            }
+        }
     }
 
     /**
@@ -228,7 +191,7 @@ public class TournamentsViewModel extends BaseObservable {
                 mIsDataLoadingError.set(false);
 
                 items.clear();
-                items.addAll(tournamentsToShow);
+                items.addAll(tournaments);
                 notifyPropertyChanged(BR.empty); // It's a @Bindable so update manually
             }
 

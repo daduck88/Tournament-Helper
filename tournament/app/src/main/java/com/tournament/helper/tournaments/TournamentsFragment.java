@@ -23,6 +23,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -139,7 +140,14 @@ public class TournamentsFragment extends Fragment {
         mSnackbarCallback = new Observable.OnPropertyChangedCallback() {
             @Override
             public void onPropertyChanged(Observable observable, int i) {
-                SnackbarUtils.showSnackbar(getView(), mTournamentsViewModel.getSnackbarText());
+                if(!TextUtils.isEmpty(mTournamentsViewModel.getSnackbarText())) {
+                    SnackbarUtils.showSnackbar(getView(), mTournamentsViewModel.getSnackbarText(), new SnackbarUtils.UtilsCallback() {
+                        @Override
+                        public void onDismissed() {
+                            mTournamentsViewModel.snackbarText.set(null);
+                        }
+                    });
+                }
             }
         };
         mTournamentsViewModel.snackbarText.addOnPropertyChangedCallback(mSnackbarCallback);

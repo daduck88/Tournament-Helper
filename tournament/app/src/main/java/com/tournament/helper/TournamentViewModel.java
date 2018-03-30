@@ -55,10 +55,10 @@ public abstract class TournamentViewModel extends BaseObservable
         mTournamentObservable.addOnPropertyChangedCallback(new OnPropertyChangedCallback() {
             @Override
             public void onPropertyChanged(Observable observable, int i) {
-                Tournament task = mTournamentObservable.get();
-                if (task != null) {
-                    title.set(task.getTitle());
-                    description.set(task.getDescription());
+                Tournament tournament = mTournamentObservable.get();
+                if (tournament != null) {
+                    title.set(tournament.getTitle());
+                    description.set(tournament.getDescription());
                 } else {
                     title.set(mContext.getString(R.string.no_data));
                     description.set(mContext.getString(R.string.no_data_description));
@@ -83,7 +83,7 @@ public abstract class TournamentViewModel extends BaseObservable
     @Bindable
     public boolean getCompleted() {
         Tournament task = mTournamentObservable.get();
-        return task != null && task.isCompleted();
+        return task != null;
     }
 
     public void setCompleted(boolean completed) {
