@@ -17,6 +17,7 @@
 package com.tournament.helper.detail;
 
 import com.tournament.helper.data.Match;
+import com.tournament.helper.detail.matches.dialog.FinishMatchDialog;
 
 /**
  * Defines the navigation actions that can be called from the Detail screen.
@@ -25,5 +26,5 @@ public interface DetailTournamentNavigator {
 
     void onTournamentSaved();
 
-    void onAddMatchResult(Match match);//AddTeamDialog.AddTeamListener addTeamListener create todo
+    void onAddMatchResult(Match match, FinishMatchDialog.FinishMatchListener finishMatchListener);//FinishMatchDialog.FinishMatchListener addTeamListener create todo
 }

@@ -33,6 +33,7 @@ import com.tournament.helper.data.Match;
 import com.tournament.helper.databinding.DetailTournamentActBinding;
 import com.tournament.helper.detail.draw.DetailTournamentDrawFragment;
 import com.tournament.helper.detail.matches.DetailTournamentMatchesFragment;
+import com.tournament.helper.detail.matches.dialog.FinishMatchDialog;
 import com.tournament.helper.utils.ActivityUtils;
 
 import java.util.ArrayList;
@@ -72,10 +73,8 @@ public class DetailTournamentActivity extends AppCompatActivity implements Detai
     finish();
   }
 
-  @Override
-  public void onAddMatchResult(Match match) {
-    //TODO
-    //        AddTeamDialog.newInstance().launchAddTeamDialog(getSupportFragmentManager(), addTeamListener);
+  public void onAddMatchResult(Match match, FinishMatchDialog.FinishMatchListener finishMatchListener) {
+    FinishMatchDialog.newInstance().launchAddTeamDialog(getSupportFragmentManager(), finishMatchListener, match);
   }
 
   @Override

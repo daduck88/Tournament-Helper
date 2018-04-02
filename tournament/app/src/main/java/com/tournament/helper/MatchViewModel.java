@@ -150,12 +150,23 @@ public abstract class MatchViewModel extends BaseObservable
     }
 
     @Bindable
-    public boolean isEmpty() {
+    public boolean isMatchEnded() {
         return !TextUtils.isEmpty(mMatch.getWinnerId());
     }
 
     @Nullable
     protected String getTournamentId() {
         return mTeam1Observable.get().getId();
+    }
+
+    protected void setWinner(String teamId) {
+        //TODO set to the math the winner
+        mMatch.setWinnerId(teamId);
+        notifyChange();
+        if(teamId.equalsIgnoreCase(mMatch.getTeam1Id())){
+            winnerName.set(team1Name.get());
+        } else {
+            winnerName.set(team2Name.get());
+        }
     }
 }

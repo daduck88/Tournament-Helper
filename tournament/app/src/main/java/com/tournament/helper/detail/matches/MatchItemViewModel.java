@@ -22,6 +22,7 @@ import com.tournament.helper.MatchViewModel;
 import com.tournament.helper.data.Match;
 import com.tournament.helper.data.source.TeamsRepository;
 import com.tournament.helper.detail.DetailTournamentNavigator;
+import com.tournament.helper.detail.matches.dialog.FinishMatchDialog;
 
 import java.lang.ref.WeakReference;
 
@@ -52,7 +53,12 @@ public class MatchItemViewModel extends MatchViewModel {
       return;
     }
     if(mNavigator != null && mNavigator.get() != null) {
-      mNavigator.get().onAddMatchResult(mMatch);
+      mNavigator.get().onAddMatchResult(mMatch, new FinishMatchDialog.FinishMatchListener() {
+        @Override
+        public void onFinishMatch(String teamId) {
+          setWinner(teamId);
+        }
+      });
     }
   }
 }

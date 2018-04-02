@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:orientation="vertical" >
+
+  <TextView
+    android:id="@+id/finish_match_title"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginEnd="@dimen/list_item_padding"
+    android:layout_marginStart="@dimen/list_item_padding"
+    android:layout_marginTop="@dimen/list_item_padding"
+    android:foreground="@drawable/accent_ripple"
+    android:gravity="center"
+    android:padding="@dimen/mt_space_small"
+    android:text="Select Winner"
+    android:textAppearance="@style/TextAppearance.AppCompat.Title"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent"/>
+
+  <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/list_item_padding"
+    android:orientation="horizontal"
+    android:weightSum="2"
+    app:layout_constraintTop_toBottomOf="@+id/finish_match_title">
+
+    <TextView
+      android:id="@+id/finish_match_team_1_bttn"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_weight="1"
+      android:foreground="@drawable/accent_ripple"
+      android:gravity="center"
+      android:padding="@dimen/mt_space_small"
+      tools:text="Team 1"/>
+
+    <TextView
+      android:id="@+id/finish_match_team_2_bttn"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_weight="1"
+      android:foreground="@drawable/accent_ripple"
+      android:gravity="center"
+      android:padding="@dimen/mt_space_small"
+      tools:text="Team 2"/>
+  </LinearLayout>
+</android.support.constraint.ConstraintLayout>
