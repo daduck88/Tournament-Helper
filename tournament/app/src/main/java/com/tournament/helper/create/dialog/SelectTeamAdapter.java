@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import com.tournament.helper.R;
-import com.tournament.helper.create.AddTournamentNavigator;
 import com.tournament.helper.create.TeamItemViewModel;
 import com.tournament.helper.data.Team;
 import com.tournament.helper.data.source.TeamsRepository;

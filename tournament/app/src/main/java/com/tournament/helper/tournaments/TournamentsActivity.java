@@ -31,6 +31,8 @@ import com.tournament.helper.Injection;
 import com.tournament.helper.R;
 import com.tournament.helper.ViewModelHolder;
 import com.tournament.helper.create.CreateTournamentActivity;
+import com.tournament.helper.detail.DetailTournamentActivity;
+import com.tournament.helper.detail.matches.DetailTournamentMatchesFragment;
 import com.tournament.helper.utils.ActivityUtils;
 
 public class TournamentsActivity extends AppCompatActivity implements TournamentItemNavigator, TournamentsNavigator {
@@ -168,10 +170,10 @@ public class TournamentsActivity extends AppCompatActivity implements Tournament
     }
 
     @Override
-    public void openTournamentDetails(String taskId) {
-//        Intent intent = new Intent(this, TournamentsActivity.class);
-//        intent.putExtra(TournamentDetailActivity.EXTRA_TASK_ID, taskId);
-//        startActivityForResult(intent, AddEditTournamentActivity.REQUEST_CODE); TODO UPDATE THIS
+    public void openTournamentDetails(String tournamentId) {
+        Intent intent = new Intent(this, DetailTournamentActivity.class);
+        intent.putExtra(DetailTournamentMatchesFragment.ARGUMENT_TOURNAMENT_ID, tournamentId);
+        startActivityForResult(intent, DetailTournamentActivity.REQUEST_CODE);
 
     }
 

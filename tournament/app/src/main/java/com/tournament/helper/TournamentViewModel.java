@@ -16,7 +16,6 @@
 
 package com.tournament.helper;
 
-import android.content.Context;
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;
 import android.databinding.Observable;
@@ -43,12 +42,9 @@ public abstract class TournamentViewModel extends BaseObservable
 
     private final TournamentsRepository mTournamentsRepository;
 
-    private final Context mContext;
-
     private boolean mIsDataLoading;
 
-    public TournamentViewModel(Context context, TournamentsRepository tasksRepository) {
-        mContext = context.getApplicationContext(); // Force use of Application Context.
+    public TournamentViewModel(TournamentsRepository tasksRepository) {
         mTournamentsRepository = tasksRepository;
 
         // Exposed observables depend on the mTournamentObservable observable:
@@ -60,8 +56,8 @@ public abstract class TournamentViewModel extends BaseObservable
                     title.set(tournament.getTitle());
                     description.set(tournament.getDescription());
                 } else {
-                    title.set(mContext.getString(R.string.no_data));
-                    description.set(mContext.getString(R.string.no_data_description));
+                    title.set(THApp.context.getString(R.string.no_data));
+                    description.set(THApp.context.getString(R.string.no_data_description));
                 }
             }
         });
@@ -95,10 +91,10 @@ public abstract class TournamentViewModel extends BaseObservable
         // Notify repository and user
         if (completed) {
             mTournamentsRepository.completeTournament(task);
-            snackbarText.set(mContext.getResources().getString(R.string.task_marked_complete));
+            snackbarText.set(THApp.context.getResources().getString(R.string.task_marked_complete));
         } else {
             mTournamentsRepository.activateTournament(task);
-            snackbarText.set(mContext.getResources().getString(R.string.task_marked_active));
+            snackbarText.set(THApp.context.getResources().getString(R.string.task_marked_active));
         }
     }
 

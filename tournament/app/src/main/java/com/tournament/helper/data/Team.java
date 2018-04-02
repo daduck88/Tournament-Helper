@@ -13,7 +13,7 @@ public class Team {
   }
 
   public Team(String title) {
-    //    id = title;
+    //    id = team1Name;
     this.title = title;
   }
 

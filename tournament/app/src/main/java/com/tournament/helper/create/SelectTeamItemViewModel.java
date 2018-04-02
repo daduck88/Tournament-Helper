@@ -128,9 +128,9 @@ public class SelectTeamItemViewModel extends BaseObservable {
   // This navigator is s wrapped in a WeakReference to avoid leaks because it has references to an
   // activity. There's no straightforward way to clear it for each item in a list adapter.
   @Nullable
-  private WeakReference<AddTournamentNavigator> mNavigator;
+  private WeakReference<CreateTournamentNavigator> mNavigator;
 
-  public void setNavigator(AddTournamentNavigator navigator) {
+  public void setNavigator(CreateTournamentNavigator navigator) {
     mNavigator = new WeakReference<>(navigator);
   }
 

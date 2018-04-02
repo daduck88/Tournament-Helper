@@ -23,9 +23,9 @@ import com.tournament.helper.data.Team;
 import java.util.List;
 
 /**
- * Defines the navigation actions that can be called from the Add/Edit screen.
+ * Defines the navigation actions that can be called from the Create Tournament screen.
  */
-public interface AddTournamentNavigator {
+public interface CreateTournamentNavigator {
 
     void onTournamentSaved();
 

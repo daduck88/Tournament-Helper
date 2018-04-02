@@ -13,7 +13,6 @@ import android.view.ViewGroup;
 
 import com.tournament.helper.Injection;
 import com.tournament.helper.R;
-import com.tournament.helper.create.AddTournamentNavigator;
 import com.tournament.helper.data.Team;
 
 import java.util.List;

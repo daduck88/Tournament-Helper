@@ -19,6 +19,7 @@ package com.tournament.helper.data.source;
 import android.support.annotation.NonNull;
 
 import com.tournament.helper.data.Team;
+import com.tournament.helper.detail.DetailTournamentViewModel;
 
 import java.util.List;
 
@@ -27,7 +28,7 @@ import java.util.List;
  */
 public interface TeamsDataSource {
 
-    interface LoadTeamsCallback {
+  interface LoadTeamsCallback {
 
         void onTeamsLoaded(List<Team> teams);
 
@@ -55,5 +56,4 @@ public interface TeamsDataSource {
     void saveTeam(@NonNull Team Team, @NonNull SaveTeamCallback callback);
 
     void refreshTeams();
-
 }

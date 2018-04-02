@@ -14,12 +14,14 @@
  * limitations under the License.
  */
 
-package com.tournament.helper.tournaments;
+package com.tournament.helper.detail.matches;
+
+import com.tournament.helper.data.Match;
 
 /**
  * Defines the navigation actions that can be called from a list item in the task list.
  */
-public interface TournamentItemNavigator {
+public interface MatchItemNavigator {
 
-    void openTournamentDetails(String tournamentId);
+    void onMatchClick(Match match);
 }

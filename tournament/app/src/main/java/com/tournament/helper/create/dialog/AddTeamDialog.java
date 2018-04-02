@@ -57,7 +57,7 @@ public class AddTeamDialog extends DialogFragment {
       public void onClick(View v) {
         String title = mAddTeamTitle.getText().toString();
         if(TextUtils.isEmpty(title)){
-          Toast.makeText(getContext(), "Set Some title to your Team", Toast.LENGTH_SHORT).show();
+          Toast.makeText(getContext(), "Set Some team1Name to your Team", Toast.LENGTH_SHORT).show();
           return;
         }
         mListener.onAddTeam(title);

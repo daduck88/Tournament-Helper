@@ -14,12 +14,16 @@
  * limitations under the License.
  */
 
-package com.tournament.helper.tournaments;
+package com.tournament.helper.detail;
+
+import com.tournament.helper.data.Match;
 
 /**
- * Defines the navigation actions that can be called from a list item in the task list.
+ * Defines the navigation actions that can be called from the Detail screen.
  */
-public interface TournamentItemNavigator {
+public interface DetailTournamentNavigator {
 
-    void openTournamentDetails(String tournamentId);
+    void onTournamentSaved();
+
+    void onAddMatchResult(Match match);//AddTeamDialog.AddTeamListener addTeamListener create todo
 }

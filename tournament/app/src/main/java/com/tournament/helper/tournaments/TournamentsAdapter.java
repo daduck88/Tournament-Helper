@@ -136,7 +136,7 @@ public class TournamentsAdapter extends RecyclerView.Adapter<TournamentsAdapter.
     }
 
     public void bind(Tournament tournament) {
-      final TournamentItemViewModel vModel = new TournamentItemViewModel(itemView.getContext(), mTournamentsRepository);
+      final TournamentItemViewModel vModel = new TournamentItemViewModel(mTournamentsRepository);
       vModel.setNavigator(mTournamentItemNavigator);
       vModel.snackbarText.addOnPropertyChangedCallback(
           new Observable.OnPropertyChangedCallback() {

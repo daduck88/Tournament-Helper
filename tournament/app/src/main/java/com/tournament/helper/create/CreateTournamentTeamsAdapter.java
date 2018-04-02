@@ -22,13 +22,13 @@ public class CreateTournamentTeamsAdapter extends RecyclerView.Adapter<CreateTou
 
   private CreateTournamentViewModel mCreateTournamentViewModel;
   private final TeamsRepository mTeamsRepository;
-  private final AddTournamentNavigator mNavigator;
+  private final CreateTournamentNavigator mNavigator;
 
   private List<SelectTeam> selectTeams;
 
   public CreateTournamentTeamsAdapter(List<SelectTeam> selectTeams,
                                       CreateTournamentViewModel tasksViewModel,
-                                      TeamsRepository teamsRepository, AddTournamentNavigator navigator) {
+                                      TeamsRepository teamsRepository, CreateTournamentNavigator navigator) {
     mCreateTournamentViewModel = tasksViewModel;
     mTeamsRepository = teamsRepository;
     mNavigator = navigator;

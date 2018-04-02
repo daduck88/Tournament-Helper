@@ -16,7 +16,6 @@
 
 package com.tournament.helper.create;
 
-import android.content.Context;
 import android.databinding.ObservableBoolean;
 import android.databinding.ObservableField;
 import android.support.annotation.Nullable;
@@ -24,11 +23,11 @@ import android.text.TextUtils;
 
 import com.tournament.helper.data.Team;
 import com.tournament.helper.data.Tournament;
-import com.tournament.helper.data.source.TeamsRepository;
 import com.tournament.helper.data.source.TournamentsDataSource;
 import com.tournament.helper.data.source.TournamentsRepository;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -56,19 +55,19 @@ public class CreateTournamentViewModel implements TournamentsDataSource.GetTourn
 
   private boolean mIsDataLoaded = false;
 
-  private AddTournamentNavigator mAddTournamentNavigator;
+  private CreateTournamentNavigator mCreateTournamentNavigator;
 
   CreateTournamentViewModel(TournamentsRepository tournamentsRepository) {
     mTournamentsRepository = tournamentsRepository;
   }
 
-  void onActivityCreated(AddTournamentNavigator navigator) {
-    mAddTournamentNavigator = navigator;
+  void onActivityCreated(CreateTournamentNavigator navigator) {
+    mCreateTournamentNavigator = navigator;
   }
 
   void onActivityDestroyed() {
     // Clear references to avoid potential memory leaks.
-    mAddTournamentNavigator = null;
+    mCreateTournamentNavigator = null;
   }
 
   public void start(String taskId) {
@@ -110,6 +109,7 @@ public class CreateTournamentViewModel implements TournamentsDataSource.GetTourn
   public void saveTournament() {
     if(isTournamentReady()) {
       if(isNewTournament()) {
+        Collections.shuffle(selectedTeams);
         createTournament(title.get(), selectedTeams);
       } else {
         updateTournament(title.get(), selectedTeams);
@@ -148,13 +148,13 @@ public class CreateTournamentViewModel implements TournamentsDataSource.GetTourn
     if(isNewTournament()) {
       throw new RuntimeException("updateTournament() was called but task is new.");
     }
-    //        mTournamentsRepository.updateTournament(new Tournament(title, description, mTournamentId));
+    //        mTournamentsRepository.updateTournament(new Tournament(team1Name, team2Name, mTournamentId));
     navigateOnTournamentSaved(); // After an edit, go back to the list.
   }
 
   private void navigateOnTournamentSaved() {
-    if(mAddTournamentNavigator != null) {
-      mAddTournamentNavigator.onTournamentSaved();
+    if(mCreateTournamentNavigator != null) {
+      mCreateTournamentNavigator.onTournamentSaved();
     }
   }
 

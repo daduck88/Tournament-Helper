@@ -2,6 +2,7 @@ package com.tournament.helper.data;
 
 import android.text.TextUtils;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -12,12 +13,19 @@ import java.util.Map;
  */
 
 public class Tournament {
+
   private String id;
   private String title;
   private List<Team> teams;
-  private List<Team> activeTeams;
   private List<String> teamsId;
   private List<String> activeTeamsId;
+  private List<String> matchTeam1Id;
+  private List<String> matchTeam2Id;
+  private List<String> matchWinnerId;
+
+  private List<Match> roundQuarterMatches;
+  private List<Match> roundSemiFinalMatches;
+  private List<Match> roundFinalMatches;
 
   public Tournament() {//used by DocumentSnapshot
   }
@@ -25,7 +33,6 @@ public class Tournament {
   public Tournament(String title, List<Team> teams) {
     this.title = title;
     this.teams = teams;
-    this.activeTeams = teams;
   }
 
   public String getId() {
@@ -52,14 +59,6 @@ public class Tournament {
     this.teams = teams;
   }
 
-  public List<Team> getActiveTeams() {
-    return activeTeams;
-  }
-
-  public void setActiveTeams(List<Team> activeTeams) {
-    this.activeTeams = activeTeams;
-  }
-
   public List<String> getTeamsId() {
     return teamsId;
   }
@@ -76,32 +75,61 @@ public class Tournament {
     this.activeTeamsId = activeTeamsId;
   }
 
+  public List<String> getMatchTeam1Id() {
+    return matchTeam1Id;
+  }
+
+  public void setMatchTeam1Id(List<String> matchTeam1Id) {
+    this.matchTeam1Id = matchTeam1Id;
+  }
+
+  public List<String> getMatchTeam2Id() {
+    return matchTeam2Id;
+  }
+
+  public void setMatchTeam2Id(List<String> matchTeam2Id) {
+    this.matchTeam2Id = matchTeam2Id;
+  }
+
+  public List<String> getMatchWinnerId() {
+    return matchWinnerId;
+  }
+
+  public void setMatchWinnerId(List<String> matchWinnerId) {
+    this.matchWinnerId = matchWinnerId;
+  }
+
+  public List<Match> getRoundQuarterMatches() {
+    return roundQuarterMatches;
+  }
+
+  public void setRoundQuarterMatches(List<Match> roundQuarterMatches) {
+    this.roundQuarterMatches = roundQuarterMatches;
+  }
+
+  public List<Match> getRoundSemiFinalMatches() {
+    return roundSemiFinalMatches;
+  }
+
+  public void setRoundSemiFinalMatches(List<Match> roundSemiFinalMatches) {
+    this.roundSemiFinalMatches = roundSemiFinalMatches;
+  }
+
+  public List<Match> getRoundFinalMatches() {
+    return roundFinalMatches;
+  }
+
+  public void setRoundFinalMatches(List<Match> roundFinalMatches) {
+    this.roundFinalMatches = roundFinalMatches;
+  }
+
   public String getTitleForList() {
-    return title;//maybe add a not title if needed
-  }
-
-  public Map<String, Object> getMap(){
-    Map<String, Object> tournamentMap = new HashMap<>();
-    if(!TextUtils.isEmpty(id))
-      tournamentMap.put("id", id);
-    tournamentMap.put("title", title);
-    tournamentMap.put("teamsId", getTeamsArrayIds(teams));
-    tournamentMap.put("activeTeamsId", getTeamsArrayIds(activeTeams));
-    return tournamentMap;
-  }
-
-  private static List getTeamsArrayIds(List<Team> teams) {
-    String[] teamIds = new String[teams.size()];
-    int i = 0;
-    for(Team team:teams){
-      teamIds[i] = team.getId();
-      i++;
-    }
-    return Arrays.asList(teamIds);
+    return title;//maybe add a not team1Name if needed
   }
 
   /**
    * show the current status of the tournament based on the current active teams
+   *
    * @return
    */
   public String getDescription() {

@@ -35,8 +35,8 @@ public class TournamentItemViewModel extends TournamentViewModel {
     @Nullable
     private WeakReference<TournamentItemNavigator> mNavigator;
 
-    public TournamentItemViewModel(Context context, TournamentsRepository tasksRepository) {
-        super(context, tasksRepository);
+    public TournamentItemViewModel(TournamentsRepository tournamentsRepository) {
+        super(tournamentsRepository);
     }
 
     public void setNavigator(TournamentItemNavigator navigator) {
@@ -47,13 +47,13 @@ public class TournamentItemViewModel extends TournamentViewModel {
      * Called by the Data Binding library when the row is clicked.
      */
     public void tournamentClicked() {
-        String taskId = getTournamentId();
-        if (taskId == null) {
+        String tournamentId = getTournamentId();
+        if (tournamentId == null) {
             // Click happened before task was loaded, no-op.
             return;
         }
         if (mNavigator != null && mNavigator.get() != null) {
-            mNavigator.get().openTournamentDetails(taskId);
+            mNavigator.get().openTournamentDetails(tournamentId);
         }
     }
 }

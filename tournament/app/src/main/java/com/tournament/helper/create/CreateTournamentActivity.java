@@ -35,7 +35,7 @@ import java.util.List;
 /**
  * Displays an add or edit task screen.
  */
-public class CreateTournamentActivity extends AppCompatActivity implements AddTournamentNavigator {
+public class CreateTournamentActivity extends AppCompatActivity implements CreateTournamentNavigator {
 
     public static final int REQUEST_CODE = 1;
 

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.tournament.helper.create;
+package com.tournament.helper.detail.matches;
 
 import android.databinding.Observable;
 import android.os.Bundle;
@@ -27,16 +27,16 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.tournament.helper.Injection;
 import com.tournament.helper.R;
+import com.tournament.helper.data.Match;
 import com.tournament.helper.data.helper.SelectTeam;
-import com.tournament.helper.databinding.CreateTournamentFragBinding;
+import com.tournament.helper.databinding.DetailTournamentFragBinding;
+import com.tournament.helper.detail.DetailTournamentActivity;
+import com.tournament.helper.detail.DetailTournamentViewModel;
 import com.tournament.helper.utils.SnackbarUtils;
 
 import java.util.ArrayList;
@@ -46,21 +46,21 @@ import static com.google.common.base.Preconditions.checkNotNull;
 /**
  * Main UI for the add task screen. Users can enter a task team1Name and team2Name.
  */
-public class CreateTournamentFragment extends Fragment {
+public class DetailTournamentMatchesFragment extends Fragment {
 
-    public static final String ARGUMENT_EDIT_TASK_ID = "EDIT_TASK_ID";
+    public static final String ARGUMENT_TOURNAMENT_ID = "TOURNAMENT_ID";
 
-    private CreateTournamentViewModel mViewModel;
+    private DetailTournamentViewModel mViewModel;
 
-    private CreateTournamentFragBinding mViewDataBinding;
+    private DetailTournamentFragBinding mViewDataBinding;
 
     private Observable.OnPropertyChangedCallback mSnackbarCallback;
 
-    public static CreateTournamentFragment newInstance() {
-        return new CreateTournamentFragment();
+    public static DetailTournamentMatchesFragment newInstance() {
+        return new DetailTournamentMatchesFragment();
     }
 
-    public CreateTournamentFragment() {
+    public DetailTournamentMatchesFragment() {
         // Required empty public constructor
     }
 
@@ -68,13 +68,13 @@ public class CreateTournamentFragment extends Fragment {
     public void onResume() {
         super.onResume();
         if (getArguments() != null) {
-            mViewModel.start(getArguments().getString(ARGUMENT_EDIT_TASK_ID));
+            mViewModel.start(getArguments().getString(ARGUMENT_TOURNAMENT_ID));
         } else {
             mViewModel.start(null);
         }
     }
 
-    public void setViewModel(@NonNull CreateTournamentViewModel viewModel) {
+    public void setViewModel(@NonNull DetailTournamentViewModel viewModel) {
         mViewModel = checkNotNull(viewModel);
     }
 
@@ -92,27 +92,24 @@ public class CreateTournamentFragment extends Fragment {
     }
 
     private void setupListAdapter() {
-        RecyclerView listView = mViewDataBinding.createTournamentTeams;
+
+        RecyclerView listView = mViewDataBinding.matchesList;
         listView.setLayoutManager(new LinearLayoutManager(getActivity()));
         // init selectTeam list
-        ArrayList<SelectTeam> selectTeams = new ArrayList<>();
-        for(int count = 0; count < 8; count++) {
-            selectTeams.add(new SelectTeam());
-        }
-        listView.setAdapter(new CreateTournamentTeamsAdapter(
-            selectTeams,
+        listView.setAdapter(new MatchesAdapter(
+            new ArrayList<Match>(),
             mViewModel,
             Injection.provideTeamsRepository(),
-            (CreateTournamentActivity) getActivity()));//navigator
+            (DetailTournamentActivity) getActivity()));//navigator
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        final View root = inflater.inflate(R.layout.create_tournament_frag, container, false);
+        final View root = inflater.inflate(R.layout.detail_tournament_frag, container, false);
         if (mViewDataBinding == null) {
-            mViewDataBinding = CreateTournamentFragBinding.bind(root);
+            mViewDataBinding = DetailTournamentFragBinding.bind(root);
         }
 
         mViewDataBinding.setViewmodel(mViewModel);
@@ -121,22 +118,6 @@ public class CreateTournamentFragment extends Fragment {
         setRetainInstance(false);
 
         return mViewDataBinding.getRoot();
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.create_tournament_menu, menu);
-        super.onCreateOptionsMenu(menu, inflater);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch(item.getItemId()){
-            case R.id.menu_create :
-                mViewModel.saveTournament();
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -169,10 +150,5 @@ public class CreateTournamentFragment extends Fragment {
         if (actionBar == null) {
             return;
         }
-//        if (getArguments().get(ARGUMENT_TOURNAMENT_ID) != null) {
-//            actionBar.setTitle(R.string.edit_task);
-//        } else {
-//            actionBar.setTitle(R.string.add_task);
-//        }
     }
 }

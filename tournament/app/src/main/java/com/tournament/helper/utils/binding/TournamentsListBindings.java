@@ -21,8 +21,10 @@ import android.support.v7.widget.RecyclerView;
 import android.widget.ListView;
 
 import com.tournament.helper.create.CreateTournamentTeamsAdapter;
+import com.tournament.helper.data.Match;
 import com.tournament.helper.data.Tournament;
 import com.tournament.helper.data.helper.SelectTeam;
+import com.tournament.helper.detail.matches.MatchesAdapter;
 import com.tournament.helper.tournaments.TournamentsAdapter;
 
 import java.util.List;
@@ -55,6 +57,20 @@ public class TournamentsListBindings {
 
         if(adapter instanceof CreateTournamentTeamsAdapter){
             ((CreateTournamentTeamsAdapter)adapter).replaceData(teams);
+        }
+    }
+    @SuppressWarnings("unchecked")
+    @BindingAdapter("app:matches")
+    public static void setMatches(RecyclerView recyclerView, List<Match> matches) {
+        RecyclerView.Adapter adapter = recyclerView.getAdapter();
+        if(adapter == null)
+            return;
+
+        if(matches == null)
+            return;
+
+        if(adapter instanceof MatchesAdapter){
+            ((MatchesAdapter)adapter).replaceData(matches);
         }
     }
 }

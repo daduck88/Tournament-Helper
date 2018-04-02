@@ -35,6 +35,7 @@ import com.tournament.helper.data.Team;
 import com.tournament.helper.data.Tournament;
 import com.tournament.helper.data.source.TeamsDataSource;
 import com.tournament.helper.data.source.TournamentsDataSource;
+import com.tournament.helper.utils.DataHelpers.TournamentHelper;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -105,7 +106,7 @@ public class TournamentsFBDataSource implements TournamentsDataSource {
     @Override
     public void saveTournament(@NonNull final Tournament tournament, @NonNull final SaveTournamentCallback callback) {
         mDB.collection(TOURNAMENTS)
-            .add(tournament.getMap())
+            .add(TournamentHelper.getMap(tournament))
             .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                 @Override
                 public void onSuccess(DocumentReference documentReference) {
@@ -127,7 +128,7 @@ public class TournamentsFBDataSource implements TournamentsDataSource {
         //todo check this
         mDB.collection(TOURNAMENTS)
             .document(tournament.getId())
-            .set(tournament.getMap())
+            .set(TournamentHelper.getMap(tournament))
             .addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
