@@ -97,12 +97,6 @@ public class TournamentsViewModel extends BaseObservable {
         loadTournaments(forceUpdate, true);
     }
 
-    public void clearCompletedTournaments() {
-        mTournamentsRepository.clearCompletedTournaments();
-        snackbarText.set(mContext.getString(R.string.completed_tournament_cleared));
-        loadTournaments(false, false);
-    }
-
     public String getSnackbarText() {
         return snackbarText.get();
     }

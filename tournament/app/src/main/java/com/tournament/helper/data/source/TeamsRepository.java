@@ -93,7 +93,6 @@ public class TeamsRepository implements TeamsDataSource {
         // Respond immediately with cache if available and not dirty
         if (mCachedTeams != null && !mCacheIsDirty) {
             callback.onTeamsLoaded(new ArrayList<>(mCachedTeams.values()));
-            return;
         }
         getTeamsFromRemoteDataSource(callback);
     }

@@ -24,7 +24,7 @@ import com.tournament.helper.detail.matches.dialog.FinishMatchDialog;
  */
 public interface DetailTournamentNavigator {
 
-    void onTournamentSaved();
+    void saveTournament();
 
     void onAddMatchResult(Match match, FinishMatchDialog.FinishMatchListener finishMatchListener);//FinishMatchDialog.FinishMatchListener addTeamListener create todo
 }

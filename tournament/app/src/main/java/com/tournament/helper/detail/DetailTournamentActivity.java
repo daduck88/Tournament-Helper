@@ -68,9 +68,10 @@ public class DetailTournamentActivity extends AppCompatActivity implements Detai
   //    }
 
   @Override
-  public void onTournamentSaved() {
-    setResult(ADD_EDIT_RESULT_OK);
-    finish();
+  public void saveTournament() {
+    mViewModel.saveTournament();
+//    setResult(ADD_EDIT_RESULT_OK);
+//    finish();
   }
 
   public void onAddMatchResult(Match match, FinishMatchDialog.FinishMatchListener finishMatchListener) {

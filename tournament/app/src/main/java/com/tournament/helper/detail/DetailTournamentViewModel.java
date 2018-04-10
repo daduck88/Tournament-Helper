@@ -30,9 +30,6 @@ import com.tournament.helper.data.source.TournamentsDataSource;
 import com.tournament.helper.data.source.TournamentsRepository;
 import com.tournament.helper.utils.DataHelpers.TournamentHelper;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * ViewModel for the Create screen.
  * <p>
@@ -91,6 +88,8 @@ public class DetailTournamentViewModel extends BaseObservable implements Tournam
   public void onTournamentLoaded(Tournament tournament) {
     mTournament = tournament;
     TournamentHelper.prepareTournamentRound(mTournament);
+    //todo check how to remove and add this fields it looks odd
+    items.clear();
     items.addAll(TournamentHelper.getAllMatch(mTournament));
     dataLoading.set(false);
     mIsDataLoaded = true;
@@ -114,16 +113,10 @@ public class DetailTournamentViewModel extends BaseObservable implements Tournam
     mTournamentsRepository.updateTournament(mTournament, mUpdateTournamentCallback);
   }
 
-  private void navigateOnTournamentSaved() {
-    if(mDetailTournamentNavigator != null) {
-      mDetailTournamentNavigator.onTournamentSaved();
-    }
-  }
-
   private TournamentsDataSource.SaveTournamentCallback mUpdateTournamentCallback = new TournamentsDataSource.SaveTournamentCallback() {
     @Override
     public void onTournamentSaved(Tournament tournament) {
-      navigateOnTournamentSaved();
+      onTournamentLoaded(tournament);
     }
 
     @Override

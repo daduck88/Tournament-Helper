@@ -39,7 +39,9 @@ public class SelectTeamDialog extends DialogFragment {
   public void launchSelectTeamDialog(@NonNull FragmentManager fragmentManager,
                                      @NonNull SelectTeamListener listener) {
     mListener = listener;
-    show(fragmentManager, SelectTeamDialog.class.getSimpleName());
+    if(!isAdded()) {
+      show(fragmentManager, SelectTeamDialog.class.getSimpleName());
+    }
   }
 
   @Nullable

@@ -129,6 +129,12 @@ public class TournamentsFBDataSource implements TournamentsDataSource {
         mDB.collection(TOURNAMENTS)
             .document(tournament.getId())
             .set(TournamentHelper.getMap(tournament))
+            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    callback.onTournamentSaved(tournament);
+                }
+            })
             .addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {

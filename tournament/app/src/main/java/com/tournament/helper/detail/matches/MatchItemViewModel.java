@@ -57,6 +57,7 @@ public class MatchItemViewModel extends MatchViewModel {
         @Override
         public void onFinishMatch(String teamId) {
           setWinner(teamId);
+          mNavigator.get().saveTournament();
         }
       });
     }

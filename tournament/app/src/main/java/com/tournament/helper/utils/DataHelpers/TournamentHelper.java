@@ -61,7 +61,7 @@ public class TournamentHelper {
 
   public static void prepareFinalMatch(Tournament tournament) {
     if(tournament.getRoundFinalMatches() == null) {
-      tournament.setRoundQuarterMatches(getRound(tournament, START_ROUND_FINAL, END_ROUND_FINAL));
+      tournament.setRoundFinalMatches(getRound(tournament, START_ROUND_FINAL, END_ROUND_FINAL));
     }
   }
 
@@ -93,7 +93,7 @@ public class TournamentHelper {
         return true;
       }
     }
-    return true;
+    return false;
   }
 
   private static List<Match> getRound(Tournament tournament, int start, int end) {
@@ -113,8 +113,9 @@ public class TournamentHelper {
     if(!TextUtils.isEmpty(tournament.getId())) {
       tournamentMap.put("id", tournament.getId());
     }
+    tournamentMap.put("title", tournament.getTitle());
     tournamentMap.put("team1Name", tournament.getTitle());
-    tournamentMap.put("teamsId", getTeamsArrayIds(tournament.getTeams()));
+    tournamentMap.put("teamsId", tournament.getTeams() != null ? getTeamsArrayIds(tournament.getTeams()) : tournament.getTeamsId());
     tournamentMap.put("matchTeam1Id", tournament.getMatchTeam1Id());
     tournamentMap.put("matchTeam2Id", tournament.getMatchTeam2Id());
     tournamentMap.put("matchWinnerId", tournament.getMatchWinnerId());
@@ -122,17 +123,21 @@ public class TournamentHelper {
   }
 
   private static void prepareMatchIds(Tournament tournament) {
+    tournament.setMatchTeam1Id(new ArrayList<String>());
+    tournament.setMatchTeam2Id(new ArrayList<String>());
+    tournament.setMatchWinnerId(new ArrayList<String>());
     if(tournament.getRoundQuarterMatches() != null) {
       setMatchIds(tournament, tournament.getRoundQuarterMatches());
+    }
+    if(tournament.getRoundSemiFinalMatches() != null) {
+      setMatchIds(tournament, tournament.getRoundSemiFinalMatches());
+    }
+    if(tournament.getRoundFinalMatches() != null) {
+      setMatchIds(tournament, tournament.getRoundFinalMatches());
     }
   }
 
   private static void setMatchIds(Tournament tournament, List<Match> matches) {
-    if(tournament.getMatchTeam1Id() == null) {
-      tournament.setMatchTeam1Id(new ArrayList<String>());
-      tournament.setMatchTeam2Id(new ArrayList<String>());
-      tournament.setMatchWinnerId(new ArrayList<String>());
-    }
     for(Match match : matches) {
       tournament.getMatchTeam1Id().add(match.getTeam1Id());
       tournament.getMatchTeam2Id().add(match.getTeam2Id());
