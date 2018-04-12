@@ -38,6 +38,25 @@
         android:name="android.support.PARENT_ACTIVITY"
         android:value="com.tournament.helper.tournaments.TournamentsActivity"/>
     </activity>
+
+
+    <receiver android:name=".widget.TournamentsWidgetProvider"
+              android:label="Tournaments" >
+      <intent-filter>
+        <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+        <action android:name="com.tournament.helper.app.ACTION_DATA_UPDATED" />
+      </intent-filter>
+      <meta-data android:name="android.appwidget.provider"
+                 android:resource="@xml/simple_widget" />
+    </receiver>
+
+    <provider
+      android:authorities="com.tournament.helper"
+      android:name="com.tournament.helper.MyContentProvider"
+      android:exported="false"></provider>
+    <service
+      android:name=".widget.WidgetService"
+      android:permission="android.permission.BIND_REMOTEVIEWS" />
   </application>
 
 </manifest>

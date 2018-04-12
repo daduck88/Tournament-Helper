@@ -26,6 +26,7 @@ public class Tournament {
   private List<Match> roundQuarterMatches;
   private List<Match> roundSemiFinalMatches;
   private List<Match> roundFinalMatches;
+  private String winnerId;
 
   public Tournament() {//used by DocumentSnapshot
   }
@@ -134,5 +135,13 @@ public class Tournament {
    */
   public String getDescription() {
     return "started Tournament";
+  }
+
+  public void setWinnerId(String winnerId) {
+    this.winnerId = winnerId;
+  }
+
+  public String getWinnerId() {
+    return winnerId;
   }
 }

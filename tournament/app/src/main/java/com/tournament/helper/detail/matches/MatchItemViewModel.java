@@ -17,6 +17,7 @@
 package com.tournament.helper.detail.matches;
 
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 
 import com.tournament.helper.MatchViewModel;
 import com.tournament.helper.data.Match;
@@ -52,7 +53,7 @@ public class MatchItemViewModel extends MatchViewModel {
       // Click happened before task was loaded, no-op.
       return;
     }
-    if(mNavigator != null && mNavigator.get() != null) {
+    if(mNavigator != null && mNavigator.get() != null && TextUtils.isEmpty(mMatch.getWinnerId())) {
       mNavigator.get().onAddMatchResult(mMatch, new FinishMatchDialog.FinishMatchListener() {
         @Override
         public void onFinishMatch(String teamId) {

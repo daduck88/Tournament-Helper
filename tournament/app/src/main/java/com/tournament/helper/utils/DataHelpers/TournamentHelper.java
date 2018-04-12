@@ -44,6 +44,8 @@ public class TournamentHelper {
     prepareFinalMatch(tournament);
     if(tournament.getRoundFinalMatches().isEmpty()) {
       tournament.getRoundFinalMatches().add(new Match(tournament.getMatchWinnerId().get(START_ROUND_SEMI_FINALS), tournament.getMatchWinnerId().get(END_ROUND_SEMI_FINALS)));
+    } else {
+      tournament.setWinnerId(tournament.getRoundFinalMatches().get(0).getWinnerId());
     }
   }
 

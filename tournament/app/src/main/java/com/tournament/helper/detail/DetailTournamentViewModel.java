@@ -49,6 +49,10 @@ public class DetailTournamentViewModel extends BaseObservable implements Tournam
 
   private Tournament mTournament;
 
+
+  public final ObservableList<String> teams = new ObservableArrayList<>();
+  public final ObservableField<String> winner = new ObservableField<>();
+
   @Nullable
   private String mTournamentId;
 
@@ -91,6 +95,9 @@ public class DetailTournamentViewModel extends BaseObservable implements Tournam
     //todo check how to remove and add this fields it looks odd
     items.clear();
     items.addAll(TournamentHelper.getAllMatch(mTournament));
+
+    teams.addAll(mTournament.getTeamsId());
+    winner.set(mTournament.getWinnerId());
     dataLoading.set(false);
     mIsDataLoaded = true;
   }

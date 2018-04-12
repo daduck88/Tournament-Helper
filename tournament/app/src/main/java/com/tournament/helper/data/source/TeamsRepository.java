@@ -131,11 +131,11 @@ public class TeamsRepository implements TeamsDataSource {
      * get the data.
      */
     @Override
-    public void getTeam(@NonNull final String tournamentId, @NonNull final TeamsDataSource.GetTeamCallback callback) {
-        checkNotNull(tournamentId);
+    public void getTeam(@NonNull final String TeamId, @NonNull final TeamsDataSource.GetTeamCallback callback) {
+        checkNotNull(TeamId);
         checkNotNull(callback);
 
-        Team cachedTeam = getTeamWithId(tournamentId);
+        Team cachedTeam = getTeamWithId(TeamId);
 
         // Respond immediately with cache if available
         if (cachedTeam != null) {
@@ -147,7 +147,7 @@ public class TeamsRepository implements TeamsDataSource {
 
         // Is the Team in the local data source? If not, query the network.
 
-        mTeamsFBDataSource.getTeam(tournamentId, new TeamsDataSource.GetTeamCallback() {
+        mTeamsFBDataSource.getTeam(TeamId, new TeamsDataSource.GetTeamCallback() {
             @Override
             public void onTeamLoaded(Team Team) {
                 // Do in memory cache update to keep the app UI up to date

@@ -122,8 +122,8 @@ public class TournamentsAdapter extends RecyclerView.Adapter<TournamentsAdapter.
 //  }
 
 
-  private void setList(List<Tournament> tasks) {
-    mTournaments = tasks;
+  private void setList(List<Tournament> tournaments) {
+    mTournaments = tournaments;
     notifyDataSetChanged();
   }
 
