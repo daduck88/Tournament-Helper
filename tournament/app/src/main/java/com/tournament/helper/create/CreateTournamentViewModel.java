@@ -51,8 +51,6 @@ public class CreateTournamentViewModel implements TournamentsDataSource.GetTourn
   @Nullable
   private String mTournamentId;
 
-  private boolean mIsNewTournament;
-
   private boolean mIsDataLoaded = false;
 
   private CreateTournamentNavigator mCreateTournamentNavigator;
@@ -76,16 +74,10 @@ public class CreateTournamentViewModel implements TournamentsDataSource.GetTourn
       return;
     }
     mTournamentId = taskId;
-    if(taskId == null) {
-      // No need to populate, it's a new task
-      mIsNewTournament = true;
-      return;
-    }
     if(mIsDataLoaded) {
       // No need to populate, already have data.
       return;
     }
-    mIsNewTournament = false;
     dataLoading.set(true);
     mTournamentsRepository.getTournament(taskId, this);
   }
@@ -108,12 +100,8 @@ public class CreateTournamentViewModel implements TournamentsDataSource.GetTourn
   // Called when clicking menu "create".
   public void saveTournament() {
     if(isTournamentReady()) {
-      if(isNewTournament()) {
-        Collections.shuffle(selectedTeams);
-        createTournament(title.get(), selectedTeams);
-      } else {
-        updateTournament(title.get(), selectedTeams);
-      }
+      Collections.shuffle(selectedTeams);
+      createTournament(title.get(), selectedTeams);
     }
   }
 
@@ -134,22 +122,9 @@ public class CreateTournamentViewModel implements TournamentsDataSource.GetTourn
     return snackbarText.get();
   }
 
-  private boolean isNewTournament() {
-    return mIsNewTournament;
-  }
-
   private void createTournament(String title, List<Team> teamList) {
     Tournament newTournament = new Tournament(title, teamList);
     mTournamentsRepository.saveTournament(newTournament, mSaveTournamentCallback);
-  }
-
-  private void updateTournament(String title, List<Team> teamList) {
-    //        TODO check to let update tournament
-    if(isNewTournament()) {
-      throw new RuntimeException("updateTournament() was called but task is new.");
-    }
-    //        mTournamentsRepository.updateTournament(new Tournament(team1Name, team2Name, mTournamentId));
-    navigateOnTournamentSaved(); // After an edit, go back to the list.
   }
 
   private void navigateOnTournamentSaved() {
@@ -165,6 +140,7 @@ public class CreateTournamentViewModel implements TournamentsDataSource.GetTourn
   private TournamentsDataSource.SaveTournamentCallback mSaveTournamentCallback = new TournamentsDataSource.SaveTournamentCallback() {
     @Override
     public void onTournamentSaved(Tournament tournament) {
+      mTournamentId = tournament.getId();
       navigateOnTournamentSaved();
     }
 
@@ -173,4 +149,8 @@ public class CreateTournamentViewModel implements TournamentsDataSource.GetTourn
       //Check what to do
     }
   };
+
+  public String getTournamentId() {
+    return mTournamentId;
+  }
 }

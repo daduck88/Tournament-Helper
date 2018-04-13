@@ -37,8 +37,9 @@ dependencies {
   implementation "com.google.code.gson:gson:$gsonVersion"
   //FireBase
 //  implementation "com.google.firebase:firebase-core:$fireBaseVersion"
-  implementation "com.google.firebase:firebase-firestore:$fireBaseVersion"
   implementation "com.google.firebase:firebase-ads:$fireBaseVersion"
+  implementation "com.google.firebase:firebase-analytics:$fireBaseVersion"
+  implementation "com.google.firebase:firebase-firestore:$fireBaseVersion"
   //Test libraries
   testImplementation 'junit:junit:4.12'
   androidTestImplementation 'com.android.support.test:runner:1.0.1'

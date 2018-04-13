@@ -22,6 +22,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.tournament.helper.Injection;
 import com.tournament.helper.R;
 import com.tournament.helper.ViewModelHolder;
@@ -44,6 +45,7 @@ public class CreateTournamentActivity extends AppCompatActivity implements Creat
   public static final String ADD_EDIT_VIEW_MODEL_TAG = "ADD_EDIT_VIEW_MODEL_TAG";
 
   private CreateTournamentViewModel mViewModel;
+  private FirebaseAnalytics mFireBaseAnalytics;
 
   @Override
   public boolean onSupportNavigateUp() {
@@ -58,6 +60,7 @@ public class CreateTournamentActivity extends AppCompatActivity implements Creat
 
   @Override
   public void onTournamentSaved() {
+    logTournamentCreated();
     setResult(ADD_EDIT_RESULT_OK);
     finish();
   }
@@ -99,6 +102,7 @@ public class CreateTournamentActivity extends AppCompatActivity implements Creat
     createTournamentFragment.setViewModel(mViewModel);
 
     mViewModel.onActivityCreated(this);
+    mFireBaseAnalytics = FirebaseAnalytics.getInstance(this);
   }
 
   @Override
@@ -151,5 +155,12 @@ public class CreateTournamentActivity extends AppCompatActivity implements Creat
           ADD_EDIT_VIEW_MODEL_TAG);
       return viewModel;
     }
+  }
+
+  private void logTournamentCreated() {
+    Bundle bundle = new Bundle();
+    bundle.putString(FirebaseAnalytics.Param.ITEM_ID, mViewModel.getTournamentId());
+    bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "tournament");
+    mFireBaseAnalytics.logEvent("tournament_created", bundle);
   }
 }

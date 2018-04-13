@@ -27,7 +27,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.google.android.gms.common.internal.zzbq.checkNotNull;
+import static com.google.gson.internal.$Gson$Preconditions.checkNotNull;
 
 /**
  * Concrete implementation to load Teams from the data sources into a cache.
