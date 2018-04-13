@@ -10,11 +10,9 @@ import android.view.ViewGroup;
 
 import com.tournament.helper.R;
 import com.tournament.helper.databinding.DetailTournamentDrawFragBinding;
-import com.tournament.helper.databinding.DetailTournamentFragBinding;
 import com.tournament.helper.detail.DetailTournamentViewModel;
-import com.tournament.helper.detail.matches.DetailTournamentMatchesFragment;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.gson.internal.$Gson$Preconditions.checkNotNull;
 
 public class DetailTournamentDrawFragment extends Fragment {
 
@@ -24,6 +22,7 @@ public class DetailTournamentDrawFragment extends Fragment {
   public static DetailTournamentDrawFragment newInstance() {
     return new DetailTournamentDrawFragment();
   }
+
   public void setViewModel(@NonNull DetailTournamentViewModel viewModel) {
     mViewModel = checkNotNull(viewModel);
   }
@@ -33,7 +32,7 @@ public class DetailTournamentDrawFragment extends Fragment {
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
                            Bundle savedInstanceState) {
     final View root = inflater.inflate(R.layout.detail_tournament_draw_frag, container, false);
-    if (mViewDataBinding == null) {
+    if(mViewDataBinding == null) {
       mViewDataBinding = DetailTournamentDrawFragBinding.bind(root);
     }
     mViewDataBinding.setViewmodel(mViewModel);

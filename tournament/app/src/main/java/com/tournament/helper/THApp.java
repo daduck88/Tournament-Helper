@@ -17,6 +17,7 @@ public class THApp extends Application {
     super.onCreate();
     context = this;
     MobileAds.initialize(this,
-            getString(R.string.admob_id));
+        "ca-app-pub-3940256099942544~3347511713");
+    //BuildConfig.ADMOB_ID);
   }
 }

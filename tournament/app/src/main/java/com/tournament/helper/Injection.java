@@ -26,7 +26,7 @@ import com.tournament.helper.data.source.TournamentsRepository;
 import com.tournament.helper.data.source.firestore.TeamsFBDataSource;
 import com.tournament.helper.data.source.firestore.TournamentsFBDataSource;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.gson.internal.$Gson$Preconditions.checkNotNull;
 
 /**
  * TODO check this doc

@@ -9,6 +9,8 @@ android {
     versionCode 1
     versionName "1.0"
     testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+    buildConfigField "String", "ADMOB_ID", getProps('admob_id')
   }
   buildTypes {
     release {
@@ -24,6 +26,18 @@ android {
   }
 }
 
+def getProps(String propName) {
+  def propsFile = rootProject.file('local.properties')
+  if (propsFile.exists()) {
+    def props = new Properties()
+    props.load(new FileInputStream(propsFile))
+    return props[propName]
+  } else {
+    println "please add a local.properties file for sensitive information"
+    return "";
+  }
+}
+
 dependencies {
   implementation fileTree(dir: 'libs', include: ['*.jar'])
   //support libraries
@@ -32,7 +46,7 @@ dependencies {
   implementation "com.android.support:recyclerview-v7:$androidSupportVersion"
   implementation 'com.android.support.constraint:constraint-layout:1.0.2'
   //utils
-  implementation "com.google.guava:guava:$guavaVersion" // 14,842 methods
+//  implementation "com.google.guava:guava:$guavaVersion" // 14,842 methods
   //gson
   implementation "com.google.code.gson:gson:$gsonVersion"
   //FireBase

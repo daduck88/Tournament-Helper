@@ -41,138 +41,133 @@ import com.tournament.helper.utils.SnackbarUtils;
 
 import java.util.ArrayList;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.gson.internal.$Gson$Preconditions.checkNotNull;
 
 /**
  * Main UI for the add task screen. Users can enter a task team1Name and team2Name.
  */
 public class CreateTournamentFragment extends Fragment {
 
-    public static final String ARGUMENT_EDIT_TASK_ID = "EDIT_TASK_ID";
+  public static final String ARGUMENT_EDIT_TASK_ID = "EDIT_TASK_ID";
 
-    private CreateTournamentViewModel mViewModel;
+  private CreateTournamentViewModel mViewModel;
 
-    private CreateTournamentFragBinding mViewDataBinding;
+  private CreateTournamentFragBinding mViewDataBinding;
 
-    private Observable.OnPropertyChangedCallback mSnackbarCallback;
+  private Observable.OnPropertyChangedCallback mSnackbarCallback;
 
-    public static CreateTournamentFragment newInstance() {
-        return new CreateTournamentFragment();
+  public static CreateTournamentFragment newInstance() {
+    return new CreateTournamentFragment();
+  }
+
+  public CreateTournamentFragment() {
+    // Required empty public constructor
+  }
+
+  @Override
+  public void onResume() {
+    super.onResume();
+  }
+
+  public void setViewModel(@NonNull CreateTournamentViewModel viewModel) {
+    mViewModel = checkNotNull(viewModel);
+  }
+
+  @Override
+  public void onActivityCreated(Bundle savedInstanceState) {
+    super.onActivityCreated(savedInstanceState);
+
+    setHasOptionsMenu(true);
+
+    setupListAdapter();
+
+    setupSnackbar();
+
+    setupActionBar();
+  }
+
+  private void setupListAdapter() {
+    RecyclerView listView = mViewDataBinding.createTournamentTeams;
+    listView.setLayoutManager(new LinearLayoutManager(getActivity()));
+    // init selectTeam list
+    ArrayList<SelectTeam> selectTeams = new ArrayList<>();
+    for(int count = 0; count < 8; count++) {
+      selectTeams.add(new SelectTeam());
+    }
+    listView.setAdapter(new CreateTournamentTeamsAdapter(
+        selectTeams,
+        mViewModel,
+        Injection.provideTeamsRepository(),
+        (CreateTournamentActivity) getActivity()));//navigator
+  }
+
+  @Nullable
+  @Override
+  public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                           Bundle savedInstanceState) {
+    final View root = inflater.inflate(R.layout.create_tournament_frag, container, false);
+    if(mViewDataBinding == null) {
+      mViewDataBinding = CreateTournamentFragBinding.bind(root);
     }
 
-    public CreateTournamentFragment() {
-        // Required empty public constructor
+    mViewDataBinding.setViewmodel(mViewModel);
+
+    setHasOptionsMenu(true);
+    setRetainInstance(false);
+
+    return mViewDataBinding.getRoot();
+  }
+
+  @Override
+  public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    inflater.inflate(R.menu.create_tournament_menu, menu);
+    super.onCreateOptionsMenu(menu, inflater);
+  }
+
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    switch(item.getItemId()) {
+      case R.id.menu_create:
+        mViewModel.saveTournament();
+        return true;
     }
+    return super.onOptionsItemSelected(item);
+  }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (getArguments() != null) {
-            mViewModel.start(getArguments().getString(ARGUMENT_EDIT_TASK_ID));
-        } else {
-            mViewModel.start(null);
-        }
+  @Override
+  public void onDestroy() {
+    if(mSnackbarCallback != null) {
+      mViewModel.snackbarText.removeOnPropertyChangedCallback(mSnackbarCallback);
     }
+    super.onDestroy();
+  }
 
-    public void setViewModel(@NonNull CreateTournamentViewModel viewModel) {
-        mViewModel = checkNotNull(viewModel);
-    }
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-        setHasOptionsMenu(true);
-
-        setupListAdapter();
-
-        setupSnackbar();
-
-        setupActionBar();
-    }
-
-    private void setupListAdapter() {
-        RecyclerView listView = mViewDataBinding.createTournamentTeams;
-        listView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        // init selectTeam list
-        ArrayList<SelectTeam> selectTeams = new ArrayList<>();
-        for(int count = 0; count < 8; count++) {
-            selectTeams.add(new SelectTeam());
-        }
-        listView.setAdapter(new CreateTournamentTeamsAdapter(
-            selectTeams,
-            mViewModel,
-            Injection.provideTeamsRepository(),
-            (CreateTournamentActivity) getActivity()));//navigator
-    }
-
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        final View root = inflater.inflate(R.layout.create_tournament_frag, container, false);
-        if (mViewDataBinding == null) {
-            mViewDataBinding = CreateTournamentFragBinding.bind(root);
-        }
-
-        mViewDataBinding.setViewmodel(mViewModel);
-
-        setHasOptionsMenu(true);
-        setRetainInstance(false);
-
-        return mViewDataBinding.getRoot();
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.create_tournament_menu, menu);
-        super.onCreateOptionsMenu(menu, inflater);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch(item.getItemId()){
-            case R.id.menu_create :
-                mViewModel.saveTournament();
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onDestroy() {
-        if (mSnackbarCallback != null) {
-            mViewModel.snackbarText.removeOnPropertyChangedCallback(mSnackbarCallback);
-        }
-        super.onDestroy();
-    }
-
-    private void setupSnackbar() {
-        mSnackbarCallback = new Observable.OnPropertyChangedCallback() {
+  private void setupSnackbar() {
+    mSnackbarCallback = new Observable.OnPropertyChangedCallback() {
+      @Override
+      public void onPropertyChanged(Observable observable, int i) {
+        if(!TextUtils.isEmpty(mViewModel.getSnackbarText())) {
+          SnackbarUtils.showSnackbar(getView(), mViewModel.getSnackbarText(), new SnackbarUtils.UtilsCallback() {
             @Override
-            public void onPropertyChanged(Observable observable, int i) {
-                if(!TextUtils.isEmpty(mViewModel.getSnackbarText())) {
-                    SnackbarUtils.showSnackbar(getView(), mViewModel.getSnackbarText(), new SnackbarUtils.UtilsCallback() {
-                        @Override
-                        public void onDismissed() {
-                            mViewModel.snackbarText.set(null);
-                        }
-                    });
-                }
+            public void onDismissed() {
+              mViewModel.snackbarText.set(null);
             }
-        };
-        mViewModel.snackbarText.addOnPropertyChangedCallback(mSnackbarCallback);
-    }
-
-    private void setupActionBar() {
-        ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-        if (actionBar == null) {
-            return;
+          });
         }
-//        if (getArguments().get(ARGUMENT_TOURNAMENT_ID) != null) {
-//            actionBar.setTitle(R.string.edit_task);
-//        } else {
-//            actionBar.setTitle(R.string.add_task);
-//        }
+      }
+    };
+    mViewModel.snackbarText.addOnPropertyChangedCallback(mSnackbarCallback);
+  }
+
+  private void setupActionBar() {
+    ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+    if(actionBar == null) {
+      return;
     }
+    //        if (getArguments().get(ARGUMENT_TOURNAMENT_ID) != null) {
+    //            actionBar.setTitle(R.string.edit_task);
+    //        } else {
+    //            actionBar.setTitle(R.string.add_task);
+    //        }
+  }
 }

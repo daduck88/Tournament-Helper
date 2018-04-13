@@ -167,7 +167,7 @@ public class TournamentsActivity extends AppCompatActivity implements Tournament
     setSupportActionBar(toolbar);
     ActionBar ab = getSupportActionBar();
     //        ab.setHomeAsUpIndicator(R.drawable.ic_menu);
-    ab.setDisplayHomeAsUpEnabled(true);
+//    ab.setDisplayHomeAsUpEnabled(true);
   }
 
   private void setupNavigationDrawer() {

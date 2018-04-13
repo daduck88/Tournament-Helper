@@ -33,7 +33,6 @@ import android.view.ViewGroup;
 import com.tournament.helper.Injection;
 import com.tournament.helper.R;
 import com.tournament.helper.data.Match;
-import com.tournament.helper.data.helper.SelectTeam;
 import com.tournament.helper.databinding.DetailTournamentFragBinding;
 import com.tournament.helper.detail.DetailTournamentActivity;
 import com.tournament.helper.detail.DetailTournamentViewModel;
@@ -41,114 +40,114 @@ import com.tournament.helper.utils.SnackbarUtils;
 
 import java.util.ArrayList;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.gson.internal.$Gson$Preconditions.checkNotNull;
 
 /**
  * Main UI for the add task screen. Users can enter a task team1Name and team2Name.
  */
 public class DetailTournamentMatchesFragment extends Fragment {
 
-    public static final String ARGUMENT_TOURNAMENT_ID = "TOURNAMENT_ID";
+  public static final String ARGUMENT_TOURNAMENT_ID = "TOURNAMENT_ID";
 
-    private DetailTournamentViewModel mViewModel;
+  private DetailTournamentViewModel mViewModel;
 
-    private DetailTournamentFragBinding mViewDataBinding;
+  private DetailTournamentFragBinding mViewDataBinding;
 
-    private Observable.OnPropertyChangedCallback mSnackbarCallback;
+  private Observable.OnPropertyChangedCallback mSnackbarCallback;
 
-    public static DetailTournamentMatchesFragment newInstance() {
-        return new DetailTournamentMatchesFragment();
+  public static DetailTournamentMatchesFragment newInstance() {
+    return new DetailTournamentMatchesFragment();
+  }
+
+  public DetailTournamentMatchesFragment() {
+    // Required empty public constructor
+  }
+
+  @Override
+  public void onResume() {
+    super.onResume();
+    if(getArguments() != null) {
+      mViewModel.start(getArguments().getString(ARGUMENT_TOURNAMENT_ID));
+    } else {
+      mViewModel.start(null);
+    }
+  }
+
+  public void setViewModel(@NonNull DetailTournamentViewModel viewModel) {
+    mViewModel = checkNotNull(viewModel);
+  }
+
+  @Override
+  public void onActivityCreated(Bundle savedInstanceState) {
+    super.onActivityCreated(savedInstanceState);
+
+    setHasOptionsMenu(true);
+
+    setupListAdapter();
+
+    setupSnackbar();
+
+    setupActionBar();
+  }
+
+  private void setupListAdapter() {
+
+    RecyclerView listView = mViewDataBinding.matchesList;
+    listView.setLayoutManager(new LinearLayoutManager(getActivity()));
+    // init selectTeam list
+    listView.setAdapter(new MatchesAdapter(
+        new ArrayList<Match>(),
+        mViewModel,
+        Injection.provideTeamsRepository(),
+        (DetailTournamentActivity) getActivity()));//navigator
+  }
+
+  @Nullable
+  @Override
+  public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                           Bundle savedInstanceState) {
+    final View root = inflater.inflate(R.layout.detail_tournament_frag, container, false);
+    if(mViewDataBinding == null) {
+      mViewDataBinding = DetailTournamentFragBinding.bind(root);
     }
 
-    public DetailTournamentMatchesFragment() {
-        // Required empty public constructor
+    mViewDataBinding.setViewmodel(mViewModel);
+
+    setHasOptionsMenu(true);
+    setRetainInstance(false);
+
+    return mViewDataBinding.getRoot();
+  }
+
+  @Override
+  public void onDestroy() {
+    if(mSnackbarCallback != null) {
+      mViewModel.snackbarText.removeOnPropertyChangedCallback(mSnackbarCallback);
     }
+    super.onDestroy();
+  }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (getArguments() != null) {
-            mViewModel.start(getArguments().getString(ARGUMENT_TOURNAMENT_ID));
-        } else {
-            mViewModel.start(null);
-        }
-    }
-
-    public void setViewModel(@NonNull DetailTournamentViewModel viewModel) {
-        mViewModel = checkNotNull(viewModel);
-    }
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-        setHasOptionsMenu(true);
-
-        setupListAdapter();
-
-        setupSnackbar();
-
-        setupActionBar();
-    }
-
-    private void setupListAdapter() {
-
-        RecyclerView listView = mViewDataBinding.matchesList;
-        listView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        // init selectTeam list
-        listView.setAdapter(new MatchesAdapter(
-            new ArrayList<Match>(),
-            mViewModel,
-            Injection.provideTeamsRepository(),
-            (DetailTournamentActivity) getActivity()));//navigator
-    }
-
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        final View root = inflater.inflate(R.layout.detail_tournament_frag, container, false);
-        if (mViewDataBinding == null) {
-            mViewDataBinding = DetailTournamentFragBinding.bind(root);
-        }
-
-        mViewDataBinding.setViewmodel(mViewModel);
-
-        setHasOptionsMenu(true);
-        setRetainInstance(false);
-
-        return mViewDataBinding.getRoot();
-    }
-
-    @Override
-    public void onDestroy() {
-        if (mSnackbarCallback != null) {
-            mViewModel.snackbarText.removeOnPropertyChangedCallback(mSnackbarCallback);
-        }
-        super.onDestroy();
-    }
-
-    private void setupSnackbar() {
-        mSnackbarCallback = new Observable.OnPropertyChangedCallback() {
+  private void setupSnackbar() {
+    mSnackbarCallback = new Observable.OnPropertyChangedCallback() {
+      @Override
+      public void onPropertyChanged(Observable observable, int i) {
+        if(!TextUtils.isEmpty(mViewModel.getSnackbarText())) {
+          SnackbarUtils.showSnackbar(getView(), mViewModel.getSnackbarText(), new SnackbarUtils.UtilsCallback() {
             @Override
-            public void onPropertyChanged(Observable observable, int i) {
-                if(!TextUtils.isEmpty(mViewModel.getSnackbarText())) {
-                    SnackbarUtils.showSnackbar(getView(), mViewModel.getSnackbarText(), new SnackbarUtils.UtilsCallback() {
-                        @Override
-                        public void onDismissed() {
-                            mViewModel.snackbarText.set(null);
-                        }
-                    });
-                }
+            public void onDismissed() {
+              mViewModel.snackbarText.set(null);
             }
-        };
-        mViewModel.snackbarText.addOnPropertyChangedCallback(mSnackbarCallback);
-    }
-
-    private void setupActionBar() {
-        ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-        if (actionBar == null) {
-            return;
+          });
         }
+      }
+    };
+    mViewModel.snackbarText.addOnPropertyChangedCallback(mSnackbarCallback);
+  }
+
+  private void setupActionBar() {
+    ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+    if(actionBar == null) {
+      return;
     }
+  }
 }
