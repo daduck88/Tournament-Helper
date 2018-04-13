@@ -23,7 +23,7 @@
       android:foreground="@drawable/accent_ripple"
       android:gravity="center"
       android:padding="@dimen/mt_space_small"
-      android:text="Add Team"/>
+      android:text="@string/add_team"/>
 
     <TextView
       android:id="@+id/select_team_cancel_bttn"
@@ -34,7 +34,7 @@
       android:foreground="@drawable/accent_ripple"
       android:gravity="center"
       android:padding="@dimen/mt_space_small"
-      android:text="Cancel"/>
+      android:text="@string/cancel"/>
 
   </LinearLayout>
 </LinearLayout>

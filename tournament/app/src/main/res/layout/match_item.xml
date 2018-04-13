@@ -44,7 +44,7 @@
       android:layout_marginEnd="@dimen/list_item_padding"
       android:layout_marginStart="@dimen/list_item_padding"
       android:layout_marginTop="@dimen/activity_horizontal_margin"
-      android:text="VS"
+      android:text="@string/match_vs"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toTopOf="parent"/>

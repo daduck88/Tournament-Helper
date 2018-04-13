@@ -17,7 +17,7 @@
     android:foreground="@drawable/accent_ripple"
     android:gravity="center"
     android:padding="@dimen/mt_space_small"
-    android:text="Select Winner"
+    android:text="@string/select_winner"
     android:textAppearance="@style/TextAppearance.AppCompat.Title"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"

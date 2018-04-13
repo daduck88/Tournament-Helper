@@ -82,7 +82,7 @@
           android:foreground="@drawable/accent_ripple"
           android:gravity="center"
           android:onClick="@{() -> viewmodel.addNewTournament()}"
-          android:text="no tournament temp"
+          android:text="@string/no_tournaments"
           android:visibility="@{viewmodel.tournamentsAddViewVisible ? View.VISIBLE : View.GONE}"/>
 
       </LinearLayout>
