@@ -1,5 +1,10 @@
 apply plugin: 'com.android.application'
-
+project.ext {
+  key_alias = getProps('key_alias')
+  key_password = getProps('key_password')
+  store_file = getProps('store_file')
+  store_password = getProps('store_password')
+}
 android {
   compileSdkVersion 26
   defaultConfig {
@@ -12,8 +17,17 @@ android {
 
 //    buildConfigField "String", "ADMOB_ID", getProps('admob_id')
   }
+  signingConfigs {
+    release {
+      keyAlias key_alias
+      keyPassword key_password
+      storeFile file(store_file)
+      storePassword store_password
+    }
+  }
   buildTypes {
     release {
+      signingConfig signingConfigs.release
       minifyEnabled false
       proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
     }
