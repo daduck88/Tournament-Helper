@@ -45,7 +45,6 @@ public class DetailTournamentViewModel extends BaseObservable implements Tournam
   private final TournamentsRepository mTournamentsRepository;
 
   public final ObservableList<Match> items = new ObservableArrayList<>();
-  private final TeamsRepository mTeamsRepository;//todo check if this is need to be removed
 
   private Tournament mTournament;
 
@@ -60,9 +59,8 @@ public class DetailTournamentViewModel extends BaseObservable implements Tournam
 
   private DetailTournamentNavigator mDetailTournamentNavigator;
 
-  DetailTournamentViewModel(TournamentsRepository tournamentsRepository, TeamsRepository teamsRepository) {
+  DetailTournamentViewModel(TournamentsRepository tournamentsRepository) {
     mTournamentsRepository = tournamentsRepository;
-    mTeamsRepository = teamsRepository;
   }
 
   void onActivityCreated(DetailTournamentNavigator navigator) {

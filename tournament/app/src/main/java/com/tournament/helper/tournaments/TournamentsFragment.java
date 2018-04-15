@@ -129,8 +129,7 @@ public class TournamentsFragment extends Fragment {
   }
 
   private void setupFab() {
-    FloatingActionButton fab =
-        (FloatingActionButton) getActivity().findViewById(R.id.fab_add_tournament);
+    FloatingActionButton fab = getActivity().findViewById(R.id.fab_add_tournament);
 
     fab.setImageResource(R.drawable.ic_add);
     fab.setOnClickListener(new View.OnClickListener() {

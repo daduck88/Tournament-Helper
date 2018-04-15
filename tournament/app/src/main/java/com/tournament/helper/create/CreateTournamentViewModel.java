@@ -23,6 +23,7 @@ import android.text.TextUtils;
 
 import com.tournament.helper.data.Team;
 import com.tournament.helper.data.Tournament;
+import com.tournament.helper.data.helper.SelectTeam;
 import com.tournament.helper.data.source.TournamentsDataSource;
 import com.tournament.helper.data.source.TournamentsRepository;
 
@@ -48,6 +49,8 @@ public class CreateTournamentViewModel implements TournamentsDataSource.GetTourn
 
   List<Team> selectedTeams = new ArrayList<>();
 
+  private final ArrayList<SelectTeam> selectedTeamsList = new ArrayList<>();
+
   @Nullable
   private String mTournamentId;
 
@@ -57,6 +60,10 @@ public class CreateTournamentViewModel implements TournamentsDataSource.GetTourn
 
   CreateTournamentViewModel(TournamentsRepository tournamentsRepository) {
     mTournamentsRepository = tournamentsRepository;
+
+    for(int count = 0; count < 8; count++) {
+      selectedTeamsList.add(new SelectTeam());
+    }
   }
 
   void onActivityCreated(CreateTournamentNavigator navigator) {
@@ -149,6 +156,10 @@ public class CreateTournamentViewModel implements TournamentsDataSource.GetTourn
       //Check what to do
     }
   };
+
+  public ArrayList<SelectTeam> getSelectedTeamsList() {
+    return selectedTeamsList;
+  }
 
   public String getTournamentId() {
     return mTournamentId;

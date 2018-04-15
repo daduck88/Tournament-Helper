@@ -21,6 +21,8 @@ import android.support.v7.widget.RecyclerView;
 import android.widget.TextView;
 
 import com.tournament.helper.Injection;
+import com.tournament.helper.R;
+import com.tournament.helper.THApp;
 import com.tournament.helper.create.CreateTournamentTeamsAdapter;
 import com.tournament.helper.data.Match;
 import com.tournament.helper.data.Team;
@@ -43,23 +45,6 @@ public class DataBindingsHelper {
     TournamentsAdapter adapter = (TournamentsAdapter) listView.getAdapter();
     if(adapter != null) {
       adapter.replaceData(items);
-    }
-  }
-
-  @SuppressWarnings("unchecked")
-  @BindingAdapter("app:teams")
-  public static void setTeams(RecyclerView recyclerView, List<SelectTeam> teams) {
-    RecyclerView.Adapter adapter = recyclerView.getAdapter();
-    if(adapter == null) {
-      return;
-    }
-
-    if(teams == null) {
-      return;
-    }
-
-    if(adapter instanceof CreateTournamentTeamsAdapter) {
-      ((CreateTournamentTeamsAdapter) adapter).replaceData(teams);
     }
   }
 
@@ -92,7 +77,7 @@ public class DataBindingsHelper {
 
         @Override
         public void onDataNotAvailable() {
-          textView.setText("team not available");
+          textView.setText(THApp.context.getText(R.string.team_not_available));
         }
       });
     }

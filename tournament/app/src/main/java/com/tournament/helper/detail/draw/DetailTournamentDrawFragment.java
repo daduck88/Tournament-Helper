@@ -36,7 +36,7 @@ public class DetailTournamentDrawFragment extends Fragment {
       mViewDataBinding = DetailTournamentDrawFragBinding.bind(root);
     }
     mViewDataBinding.setViewmodel(mViewModel);
-    setRetainInstance(false);
+    setRetainInstance(true);
     return mViewDataBinding.getRoot();
   }
 }

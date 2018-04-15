@@ -18,8 +18,8 @@
 
     <item
         android:id="@+id/list_navigation_menu_item"
-        android:title="list temp" />
+        android:title="@string/list_temp" />
     <item
         android:id="@+id/statistics_navigation_menu_item"
-        android:title="statistics temp" />
+        android:title="@string/statistics_temp" />
 </menu>

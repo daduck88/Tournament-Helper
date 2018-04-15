@@ -52,10 +52,6 @@ public class DetailTournamentActivity extends AppCompatActivity implements Detai
 
   private DetailTournamentViewModel mViewModel;
 
-  private List<Fragment> mFragments;
-  private TabLayout mTabLayout;
-  private ViewPager mViewPager;
-
   @Override
   public boolean onSupportNavigateUp() {
     onBackPressed();
@@ -98,14 +94,14 @@ public class DetailTournamentActivity extends AppCompatActivity implements Detai
     DetailTournamentDrawFragment detailTournamentDrawFragment = findOrCreateDrawFragment();
     // Link View and ViewModel
     detailTournamentDrawFragment.setViewModel(mViewModel);
-    mFragments = new ArrayList<>();
+    List<Fragment> mFragments = new ArrayList<>();
     mFragments.add(detailTournamentMatchesFragment);
     mFragments.add(detailTournamentDrawFragment);
 
-    mViewPager = findViewById(R.id.vp_fragments_container);
+    ViewPager mViewPager = findViewById(R.id.vp_fragments_container);
     mViewPager.setAdapter(new ViewPagerAdapter(getSupportFragmentManager(), mFragments));
 
-    mTabLayout = findViewById(R.id.tl_tabs_container);
+    TabLayout mTabLayout = findViewById(R.id.tl_tabs_container);
     mTabLayout.setupWithViewPager(mViewPager);
   }
 
@@ -164,8 +160,7 @@ public class DetailTournamentActivity extends AppCompatActivity implements Detai
     } else {
       // There is no ViewModel yet, create it.
       DetailTournamentViewModel viewModel = new DetailTournamentViewModel(
-          Injection.provideTournamentsRepository(getApplicationContext()),
-          Injection.provideTeamsRepository());
+          Injection.provideTournamentsRepository(getApplicationContext()));
 
       // and bind it to this Activity's lifecycle using the Fragment Manager.
       ActivityUtils.addFragmentToActivity(

@@ -22,7 +22,6 @@ public class AddTeamDialog extends DialogFragment {
 
   private AddTeamListener mListener;
   private EditText mAddTeamTitle;
-  private View mAddTeamBttn;
 
   @NonNull
   public static AddTeamDialog newInstance() {
@@ -50,7 +49,7 @@ public class AddTeamDialog extends DialogFragment {
 
   private void setupViews(View view) {
     mAddTeamTitle = view.findViewById(R.id.add_team_title_inpt);
-    mAddTeamBttn = view.findViewById(R.id.add_team_bttn);
+    View mAddTeamBttn = view.findViewById(R.id.add_team_bttn);
 
     mAddTeamBttn.setOnClickListener(new View.OnClickListener() {
       @Override

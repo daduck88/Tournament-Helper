@@ -94,29 +94,6 @@ public class TournamentsActivity extends AppCompatActivity implements Tournament
     });
     mInterstitialAd.loadAd(new AdRequest.Builder().build());
   }
-  public static final String md5(final String s) {
-    try {
-      // Create MD5 Hash
-      MessageDigest digest = java.security.MessageDigest
-          .getInstance("MD5");
-      digest.update(s.getBytes());
-      byte messageDigest[] = digest.digest();
-
-      // Create Hex String
-      StringBuffer hexString = new StringBuffer();
-      for (int i = 0; i < messageDigest.length; i++) {
-        String h = Integer.toHexString(0xFF & messageDigest[i]);
-        while (h.length() < 2)
-          h = "0" + h;
-        hexString.append(h);
-      }
-      return hexString.toString();
-
-    } catch (NoSuchAlgorithmException e) {
-//      Logger.logStackTrace(TAG,e);
-    }
-    return "";
-  }
 
   @Override
   protected void onDestroy() {
@@ -138,8 +115,7 @@ public class TournamentsActivity extends AppCompatActivity implements Tournament
     } else {
       // There is no ViewModel yet, create it.
       TournamentsViewModel viewModel = new TournamentsViewModel(
-          Injection.provideTournamentsRepository(getApplicationContext()),
-          getApplicationContext());
+          Injection.provideTournamentsRepository(getApplicationContext()));
       // and bind it to this Activity's lifecycle using the Fragment Manager.
       ActivityUtils.addFragmentToActivity(
           getSupportFragmentManager(),
@@ -163,7 +139,7 @@ public class TournamentsActivity extends AppCompatActivity implements Tournament
   }
 
   private void setupToolbar() {
-    Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+    Toolbar toolbar = findViewById(R.id.toolbar);
     setSupportActionBar(toolbar);
     ActionBar ab = getSupportActionBar();
     //        ab.setHomeAsUpIndicator(R.drawable.ic_menu);
@@ -171,9 +147,9 @@ public class TournamentsActivity extends AppCompatActivity implements Tournament
   }
 
   private void setupNavigationDrawer() {
-    mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+    mDrawerLayout = findViewById(R.id.drawer_layout);
     mDrawerLayout.setStatusBarBackground(R.color.colorPrimaryDark);
-    NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+    NavigationView navigationView = findViewById(R.id.nav_view);
     if(navigationView != null) {
       setupDrawerContent(navigationView);
     }

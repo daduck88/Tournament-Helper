@@ -10,13 +10,9 @@ import com.tournament.helper.data.helper.SelectTeam;
 import com.tournament.helper.data.source.TeamsRepository;
 import com.tournament.helper.databinding.SelectTeamItemBinding;
 
-import java.util.List;
-
 /**
  * Created by destevancardozoj on 2/20/18.
  */
-
-
 
 public class CreateTournamentTeamsAdapter extends RecyclerView.Adapter<CreateTournamentTeamsAdapter.BindingHolder> {
 
@@ -24,24 +20,15 @@ public class CreateTournamentTeamsAdapter extends RecyclerView.Adapter<CreateTou
   private final TeamsRepository mTeamsRepository;
   private final CreateTournamentNavigator mNavigator;
 
-  private List<SelectTeam> selectTeams;
-
-  public CreateTournamentTeamsAdapter(List<SelectTeam> selectTeams,
-                                      CreateTournamentViewModel tasksViewModel,
+  public CreateTournamentTeamsAdapter(CreateTournamentViewModel tasksViewModel,
                                       TeamsRepository teamsRepository, CreateTournamentNavigator navigator) {
     mCreateTournamentViewModel = tasksViewModel;
     mTeamsRepository = teamsRepository;
     mNavigator = navigator;
-    setList(selectTeams);
-
-  }
-
-  public void replaceData(List<SelectTeam> tasks) {
-    setList(tasks);
   }
 
   public SelectTeam getItem(int i) {
-    return selectTeams.get(i);
+    return mCreateTournamentViewModel.getSelectedTeamsList().get(i);
   }
 
   @Override
@@ -52,7 +39,6 @@ public class CreateTournamentTeamsAdapter extends RecyclerView.Adapter<CreateTou
         parent,
         false);
     return new BindingHolder(commentsHeaderBinding);
-
   }
 
   @Override
@@ -67,49 +53,7 @@ public class CreateTournamentTeamsAdapter extends RecyclerView.Adapter<CreateTou
 
   @Override
   public int getItemCount() {
-    return selectTeams != null ? selectTeams.size() : 0;
-  }
-
-//  @Override
-//  public View getView(int i, View view, ViewGroup viewGroup) {
-//    SelectTeam selectTeam = getItem(i);
-//    TournamentItemBinding binding;
-//    if (view == null) {
-//      // Inflate
-//      LayoutInflater inflater = LayoutInflater.from(viewGroup.getContext());
-//
-//      // Create the binding
-//      binding = TournamentItemBinding.inflate(inflater, viewGroup, false);
-//    } else {
-//      // Recycling view
-//      binding = DataBindingUtil.getBinding(view);
-//    }
-//
-//    final TournamentItemViewModel viewmodel = new TournamentItemViewModel(
-//        viewGroup.getContext().getApplicationContext(),
-//        mTournamentsRepository
-//    );
-//
-//    viewmodel.setListener(mTournamentItemNavigator);
-//
-//    binding.setViewmodel(viewmodel);
-//    // To save on PropertyChangedCallbacks, wire the item's snackbar text observable to the
-//    // fragment's.
-//    viewmodel.snackbarText.addOnPropertyChangedCallback(
-//        new Observable.OnPropertyChangedCallback() {
-//          @Override
-//          public void onPropertyChanged(Observable observable, int i) {
-//            mCreateTournamentViewModel.snackbarText.set(viewmodel.getSnackbarText());
-//          }
-//        });
-//    viewmodel.setTeam(selectTeam);
-//
-//    return binding.getRoot();
-//  }
-
-  private void setList(List<SelectTeam> selectTeams) {
-    this.selectTeams = selectTeams;
-    notifyDataSetChanged();
+    return mCreateTournamentViewModel.getSelectedTeamsList() != null ? mCreateTournamentViewModel.getSelectedTeamsList().size() : 0;
   }
 
   public class BindingHolder extends RecyclerView.ViewHolder {
@@ -119,7 +63,8 @@ public class CreateTournamentTeamsAdapter extends RecyclerView.Adapter<CreateTou
       super(binding.getRoot());
       this.binding = binding;
     }
-    public void bind(SelectTeam selectTeam){
+
+    public void bind(SelectTeam selectTeam) {
       SelectTeamItemViewModel vModel = new SelectTeamItemViewModel(selectTeam, mCreateTournamentViewModel, mTeamsRepository);
       vModel.setNavigator(mNavigator);
       binding.setViewmodel(vModel);//todo u

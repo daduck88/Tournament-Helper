@@ -3,10 +3,6 @@ package com.tournament.helper;
 import android.net.Uri;
 import android.provider.BaseColumns;
 
-/**
- * Created by Indian Dollar on 3/5/2017.
- */
-
 public class Contract implements BaseColumns {
 
     public static final String TABLE_NAME = "tournaments_list";

@@ -27,6 +27,7 @@ import android.graphics.drawable.Drawable;
 
 import com.tournament.helper.BR;
 import com.tournament.helper.R;
+import com.tournament.helper.THApp;
 import com.tournament.helper.create.CreateTournamentActivity;
 import com.tournament.helper.data.Tournament;
 import com.tournament.helper.data.source.TournamentsDataSource;
@@ -61,14 +62,10 @@ public class TournamentsViewModel extends BaseObservable {
 
     private final ObservableBoolean mIsDataLoadingError = new ObservableBoolean(false);
 
-    private Context mContext; // To avoid leaks, this must be an Application Context.
-
     private TournamentsNavigator mNavigator;
 
     public TournamentsViewModel(
-            TournamentsRepository repository,
-            Context context) {
-        mContext = context.getApplicationContext(); // Force use of Application Context.
+            TournamentsRepository repository) {
         mTournamentsRepository = repository;
 
         // Set initial state
@@ -118,8 +115,7 @@ public class TournamentsViewModel extends BaseObservable {
 //                            mContext.getString(R.string.successfully_saved_tournament_message));
 //                    break;
                 case CreateTournamentActivity.ADD_EDIT_RESULT_OK:
-                    snackbarText.set("tournament created");
-//                            mContext.getString(R.string.successfully_added_tournament_message));
+                    snackbarText.set(THApp.context.getString(R.string.completed_tournament_cleared));
                     break;
 //                case TournamentDetailActivity.DELETE_RESULT_OK:
 //                    snackbarText.set(

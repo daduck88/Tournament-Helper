@@ -19,11 +19,10 @@ public class ListProvider implements RemoteViewsService.RemoteViewsFactory {
 
   private Context context = null;
   List<Pair<String, String>> listItemList = new ArrayList<>();
-  private int appWidgetId;
 
   public ListProvider(Context context, Intent intent) {
     this.context = context;
-    appWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID,
+    int appWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID,
         AppWidgetManager.INVALID_APPWIDGET_ID);
 
     populateListItem();

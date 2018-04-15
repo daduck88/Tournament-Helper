@@ -24,9 +24,6 @@ import java.util.List;
 public class SelectTeamDialog extends DialogFragment {
 
   private SelectTeamListener mListener;
-  private RecyclerView mSelectTeamList;
-  private View mSeleteTeamCancelBttn;
-  private View mSelectTeamAddTeamBttn;
   private List<Team> teams;
 
   @NonNull
@@ -57,9 +54,9 @@ public class SelectTeamDialog extends DialogFragment {
   }
 
   private void setupViews(View view) {
-    mSelectTeamList = view.findViewById(R.id.select_team_list);
-    mSeleteTeamCancelBttn = view.findViewById(R.id.select_team_cancel_bttn);
-    mSelectTeamAddTeamBttn = view.findViewById(R.id.select_team_add_bttn);
+    RecyclerView mSelectTeamList = view.findViewById(R.id.select_team_list);
+    View mSeleteTeamCancelBttn = view.findViewById(R.id.select_team_cancel_bttn);
+    View mSelectTeamAddTeamBttn = view.findViewById(R.id.select_team_add_bttn);
 
     mSelectTeamList.setLayoutManager(new LinearLayoutManager(getContext()));
     SelectTeamAdapter adapter = new SelectTeamAdapter(teams, Injection.provideTeamsRepository(), new SelectTeamListener() {

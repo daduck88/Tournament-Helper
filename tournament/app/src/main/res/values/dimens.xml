@@ -1,5 +1,5 @@
 <resources>
-  <dimen name="fab_elevation">6dp</dimen>
+  <!--<dimen name="fab_elevation">6dp</dimen>-->
   <dimen name="mt_space_small">8dp</dimen>
   <dimen name="mt_space_medium">16dp</dimen>
   <dimen name="mt_space_large">32dp</dimen>

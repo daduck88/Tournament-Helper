@@ -88,7 +88,7 @@ public class CreateTournamentActivity extends AppCompatActivity implements Creat
     setContentView(R.layout.create_tournament_act);
 
     // Set up the toolbar.
-    Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+    Toolbar toolbar = findViewById(R.id.toolbar);
     setSupportActionBar(toolbar);
     ActionBar actionBar = getSupportActionBar();
     actionBar.setDisplayHomeAsUpEnabled(true);

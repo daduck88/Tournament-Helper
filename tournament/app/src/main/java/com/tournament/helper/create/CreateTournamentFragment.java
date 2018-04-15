@@ -90,12 +90,7 @@ public class CreateTournamentFragment extends Fragment {
     RecyclerView listView = mViewDataBinding.createTournamentTeams;
     listView.setLayoutManager(new LinearLayoutManager(getActivity()));
     // init selectTeam list
-    ArrayList<SelectTeam> selectTeams = new ArrayList<>();
-    for(int count = 0; count < 8; count++) {
-      selectTeams.add(new SelectTeam());
-    }
     listView.setAdapter(new CreateTournamentTeamsAdapter(
-        selectTeams,
         mViewModel,
         Injection.provideTeamsRepository(),
         (CreateTournamentActivity) getActivity()));//navigator

@@ -114,7 +114,7 @@ public class DetailTournamentMatchesFragment extends Fragment {
     mViewDataBinding.setViewmodel(mViewModel);
 
     setHasOptionsMenu(true);
-    setRetainInstance(false);
+    setRetainInstance(true);
 
     return mViewDataBinding.getRoot();
   }
